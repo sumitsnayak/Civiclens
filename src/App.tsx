@@ -11,6 +11,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { CivicAnalyticsPage } from './pages/CivicAnalyticsPage';
 import { AboutPage } from './pages/AboutPage';
 import { AuthPage } from './pages/AuthPage';
+import { QueriesPage } from './pages/QueriesPage';
 import { Report } from './types';
 import { ReportService } from './lib/reportStore';
 
@@ -51,7 +52,7 @@ export const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-electric-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#F5F4F8] text-slate-900 font-sans antialiased selection:bg-[#442646] selection:text-white">
       <Navbar currentTab={currentTab} onNavigate={handleNavigate} />
 
       <main className="flex-1">
@@ -100,6 +101,8 @@ export const AppContent: React.FC = () => {
 
         {currentTab === 'about' && <AboutPage />}
 
+        {currentTab === 'queries' && <QueriesPage />}
+
         {currentTab === 'auth' && (
           <AuthPage onSuccess={() => handleNavigate('citizen-dashboard')} />
         )}
@@ -119,3 +122,4 @@ export function App() {
 }
 
 export default App;
+

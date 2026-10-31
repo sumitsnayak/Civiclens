@@ -7,15 +7,13 @@ import { SeverityBadge } from '../components/common/SeverityBadge';
 import { CategoryBadge } from '../components/common/CategoryBadge';
 import { timeAgo } from '../lib/utils';
 import { 
-  PlusCircle, 
+  Plus, 
   Clock, 
-  CheckCircle2, 
-  Wrench, 
-  FileText, 
+  CheckCircle, 
   MapPin, 
   Search, 
-  ExternalLink,
-  UserCheck
+  ArrowRight,
+  FileText
 } from 'lucide-react';
 
 interface CitizenDashboardProps {
@@ -38,11 +36,9 @@ export const CitizenDashboard: React.FC<CitizenDashboardProps> = ({
 
   const loadUserReports = async () => {
     const all = await ReportService.getReports();
-    // Filter reports belonging to the current user (or demo citizen items)
     const userReports = all.filter(
       (r) => r.user_id === user?.id || (user?.role === 'citizen' && r.user_id === 'usr-citizen-1')
     );
-    // If none assigned specifically, show initial batch for demo friendliness
     setReports(userReports.length > 0 ? userReports : all.slice(0, 3));
   };
 
@@ -59,112 +55,77 @@ export const CitizenDashboard: React.FC<CitizenDashboardProps> = ({
   const resolved = reports.filter((r) => r.status === 'resolved').length;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-midnight-950 via-midnight-900 to-slate-900 border border-midnight-800 rounded-3xl p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-6 shadow-xl">
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-electric-500/20 text-electric-400 text-xs font-semibold border border-electric-500/30">
-            <UserCheck size={13} />
-            <span>Citizen Action Portal</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Welcome back, {user?.display_name || 'Civic Champion'}
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      {/* Top Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E7E2ED] pb-4">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+            Citizen Dashboard
           </h1>
-          <p className="text-xs text-slate-300 max-w-xl leading-relaxed">
-            Track your submitted neighborhood hazards, verify work orders, and review public maintenance notes in real-time.
+          <p className="text-xs text-slate-500 mt-0.5">
+            Active session: <strong className="text-slate-800">{user?.display_name || 'Citizen'}</strong>
           </p>
         </div>
 
         <button
           onClick={onNavigateToReport}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-electric-500 hover:bg-electric-400 text-midnight-950 font-extrabold text-sm shadow-glow-teal hover:scale-105 active:scale-95 transition-all shrink-0"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#442646] hover:bg-[#341B36] text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all w-fit"
         >
-          <PlusCircle size={18} />
+          <Plus size={15} className="stroke-[2.5]" />
           <span>Report New Problem</span>
         </button>
       </div>
 
-      {/* KPI Cards Grid */}
+      {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {/* Total */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-xs text-slate-500">
-            <span>My Total Reports</span>
-            <FileText size={16} className="text-slate-400" />
-          </div>
-          <div className="text-3xl font-black text-slate-900 dark:text-white">
-            {reports.length}
-          </div>
-          <p className="text-[11px] text-slate-400">Total submitted tickets</p>
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-4 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-[11px] font-semibold text-slate-500 uppercase">My Reports</div>
+          <div className="text-2xl font-black text-slate-900 mt-1">{reports.length}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">Total tickets filed</div>
         </div>
 
-        {/* Awaiting Review */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-xs text-amber-600">
-            <span>Awaiting Review</span>
-            <Clock size={16} />
-          </div>
-          <div className="text-3xl font-black text-amber-500">
-            {awaitingReview}
-          </div>
-          <p className="text-[11px] text-slate-400">Under dispatcher triage</p>
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-4 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-[11px] font-bold text-[#B55D1C] uppercase">Awaiting Triage</div>
+          <div className="text-2xl font-black text-[#B55D1C] mt-1">{awaitingReview}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">Pending dispatcher review</div>
         </div>
 
-        {/* In Progress */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-xs text-purple-600">
-            <span>In Remediation</span>
-            <Wrench size={16} />
-          </div>
-          <div className="text-3xl font-black text-purple-500">
-            {inProgress}
-          </div>
-          <p className="text-[11px] text-slate-400">Work crew assigned</p>
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-4 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-[11px] font-bold text-[#552B58] uppercase">In Remediation</div>
+          <div className="text-2xl font-black text-[#552B58] mt-1">{inProgress}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">Crew deployed</div>
         </div>
 
-        {/* Resolved */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-xs text-emerald-600">
-            <span>Resolved</span>
-            <CheckCircle2 size={16} />
-          </div>
-          <div className="text-3xl font-black text-emerald-500">
-            {resolved}
-          </div>
-          <p className="text-[11px] text-slate-400">Completed & verified</p>
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-4 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-[11px] font-bold text-[#247A48] uppercase">Resolved</div>
+          <div className="text-2xl font-black text-[#247A48] mt-1">{resolved}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">Verified completion</div>
         </div>
       </div>
 
-      {/* Submissions Section */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-              My Submitted Reports
-            </h2>
-            <p className="text-xs text-slate-500">
-              Select any report to inspect details, photo diagnostics, and status timeline
-            </p>
-          </div>
+      {/* Reports List */}
+      <div className="bg-white border border-[#E7E2ED] rounded-3xl p-5 sm:p-6 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <h2 className="text-sm font-bold text-slate-900">
+            My Submitted Tickets
+          </h2>
 
           <div className="flex items-center gap-2">
-            {/* Search */}
             <div className="relative">
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search my reports..."
-                className="pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-electric-500"
+                placeholder="Search my tickets..."
+                className="pl-7 pr-3 py-1.5 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white"
               />
-              <Search size={14} className="absolute left-2.5 top-2 text-slate-400" />
+              <Search size={13} className="absolute left-2.5 top-2 text-slate-400" />
             </div>
 
-            {/* Filter by Status */}
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-electric-500"
+              className="px-2.5 py-1.5 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white"
             >
               <option value="all">All Statuses</option>
               <option value="reported">Reported</option>
@@ -175,57 +136,52 @@ export const CitizenDashboard: React.FC<CitizenDashboardProps> = ({
           </div>
         </div>
 
-        {/* Reports Table / List */}
+        {/* List items */}
         {filteredReports.length > 0 ? (
-          <div className="space-y-3">
+          <div className="divide-y divide-[#F0EDF5]">
             {filteredReports.map((report) => (
               <div
                 key={report.id}
                 onClick={() => onSelectReport(report)}
-                className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-electric-500/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group"
+                className="py-3.5 flex items-center justify-between gap-4 cursor-pointer hover:bg-[#F9F8FB] -mx-2 px-3 rounded-2xl transition-colors group"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3.5 min-w-0">
                   <img
                     src={report.image_path}
                     alt={report.title}
-                    className="w-16 h-16 rounded-xl object-cover shrink-0 border border-slate-200 dark:border-slate-700"
+                    className="w-14 h-14 rounded-xl object-cover border border-[#EAE6F0] shrink-0"
                   />
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-mono font-bold text-slate-700 dark:text-slate-300">
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-mono text-[11px] font-semibold text-slate-500 bg-[#F5F4F8] px-2 py-0.5 rounded-md border border-[#EAE6F0]">
                         {report.reference_code}
                       </span>
                       <CategoryBadge category={report.category} size="sm" />
                       <SeverityBadge severity={report.severity} size="sm" />
                     </div>
 
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-electric-600 transition-colors">
+                    <h3 className="text-xs font-bold text-slate-900 truncate group-hover:text-[#552B58] transition-colors">
                       {report.title}
                     </h3>
 
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
-                      <span className="flex items-center gap-1">
-                        <MapPin size={12} className="text-electric-500" />
-                        <span className="truncate max-w-xs">{report.address}</span>
-                      </span>
+                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                      <span className="truncate max-w-xs">{report.address}</span>
                       <span>•</span>
                       <span>{timeAgo(report.created_at)}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 self-end sm:self-center">
+                <div className="flex items-center gap-3 shrink-0">
                   <StatusBadge status={report.status} size="sm" />
-                  <div className="text-slate-400 group-hover:text-electric-600 group-hover:translate-x-1 transition-all">
-                    <ExternalLink size={16} />
-                  </div>
+                  <ArrowRight size={14} className="text-slate-400 group-hover:text-[#552B58] group-hover:translate-x-0.5 transition-all" />
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 text-slate-400 text-xs">
-            No matching personal submissions found.
+          <div className="py-12 text-center text-xs text-slate-500">
+            No submissions found matching criteria.
           </div>
         )}
       </div>

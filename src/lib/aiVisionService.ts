@@ -25,12 +25,12 @@ export async function fileToBase64(file: File): Promise<string> {
  * Analyzes a civic issue image using Gemini Vision API or intelligent local fallback
  */
 export async function analyzeCivicImage(
-  imageFile: File,
-  previewUrl: string
+  imageFile?: File | null,
+  previewUrl: string = ''
 ): Promise<{ result: AIVisionResult; isLiveAI: boolean }> {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-  if (isAIApiConfigured && apiKey) {
+  if (isAIApiConfigured && apiKey && imageFile) {
     try {
       const base64Data = await fileToBase64(imageFile);
       const mimeType = imageFile.type || 'image/jpeg';
@@ -106,7 +106,7 @@ Ensure valid JSON without markdown wrapping if possible.`;
   // Graceful local heuristic / offline analyzer for smooth hackathon testing & demos
   await new Promise((res) => setTimeout(res, 1200)); // Simulate realistic analysis time
 
-  const fallbackResult = analyzeLocally(imageFile);
+  const fallbackResult = analyzeLocally(imageFile, previewUrl);
   return {
     result: fallbackResult,
     isLiveAI: false,
@@ -132,8 +132,8 @@ function sanitizeSeverity(sev: string): ReportSeverity {
   return valid.includes(lower as ReportSeverity) ? (lower as ReportSeverity) : 'medium';
 }
 
-function analyzeLocally(file: File): AIVisionResult {
-  const name = file.name.toLowerCase();
+function analyzeLocally(file?: File | null, url: string = ''): AIVisionResult {
+  const name = (file?.name || url || '').toLowerCase();
 
   if (name.includes('garbage') || name.includes('trash') || name.includes('waste') || name.includes('dump')) {
     return {
@@ -200,3 +200,4 @@ function analyzeLocally(file: File): AIVisionResult {
     suggested_title: 'Severe road surface pothole requiring asphalt patching',
   };
 }
+

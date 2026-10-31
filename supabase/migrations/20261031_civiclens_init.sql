@@ -1,6 +1,6 @@
 -- CivicLens Supabase Schema & Security Migration
--- Version: 1.0.0
--- Description: Core tables, RLS policies, trigger-based profile creation, and demo data for CivicLens
+-- Version: 1.1.0
+-- Description: Core tables, citizen queries storage, RLS policies, trigger-based profile creation, and demo data
 
 -- 1. Create custom types if needed
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS public.reports (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     reference_code TEXT UNIQUE NOT NULL,
     user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    author_name TEXT DEFAULT 'Citizen Reporter',
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     category TEXT NOT NULL CHECK (category IN ('pothole', 'garbage', 'streetlight', 'water_leakage', 'drainage', 'infrastructure', 'other')),
@@ -34,6 +35,7 @@ CREATE TABLE IF NOT EXISTS public.reports (
     ai_confidence DOUBLE PRECISION,
     duplicate_of UUID REFERENCES public.reports(id) ON DELETE SET NULL,
     upvotes_count INTEGER NOT NULL DEFAULT 0,
+    priority_score INTEGER NOT NULL DEFAULT 60,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
     resolved_at TIMESTAMPTZ
@@ -44,6 +46,7 @@ CREATE TABLE IF NOT EXISTS public.report_updates (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     report_id UUID NOT NULL REFERENCES public.reports(id) ON DELETE CASCADE,
     actor_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    actor_name TEXT,
     previous_status TEXT,
     new_status TEXT NOT NULL,
     public_message TEXT,
@@ -51,112 +54,87 @@ CREATE TABLE IF NOT EXISTS public.report_updates (
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
--- 5. Report Upvotes / Confirmations
-CREATE TABLE IF NOT EXISTS public.report_upvotes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    report_id UUID NOT NULL REFERENCES public.reports(id) ON DELETE CASCADE,
-    user_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
-    UNIQUE(report_id, user_id)
+-- 5. Citizen Queries / Inquiries Table
+CREATE TABLE IF NOT EXISTS public.citizen_queries (
+    id TEXT PRIMARY KEY,
+    ticket_reference TEXT,
+    author_name TEXT NOT NULL DEFAULT 'Citizen Inquirer',
+    category TEXT NOT NULL DEFAULT 'general',
+    question TEXT NOT NULL,
+    details TEXT,
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('answered', 'pending', 'escalated')),
+    response TEXT,
+    responder_name TEXT,
+    upvotes INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
--- 6. Indexes for high performance
-CREATE INDEX IF NOT EXISTS idx_reports_category ON public.reports(category);
-CREATE INDEX IF NOT EXISTS idx_reports_status ON public.reports(status);
-CREATE INDEX IF NOT EXISTS idx_reports_severity ON public.reports(severity);
-CREATE INDEX IF NOT EXISTS idx_reports_created_at ON public.reports(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_reports_user_id ON public.reports(user_id);
-CREATE INDEX IF NOT EXISTS idx_reports_coordinates ON public.reports(latitude, longitude);
-CREATE INDEX IF NOT EXISTS idx_report_updates_report_id ON public.report_updates(report_id);
-CREATE INDEX IF NOT EXISTS idx_report_upvotes_user_id ON public.report_upvotes(user_id);
-
--- 7. Trigger to automatically handle profile creation on auth.users sign-up
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-    INSERT INTO public.profiles (id, display_name, role)
-    VALUES (
-        NEW.id,
-        COALESCE(NEW.raw_user_meta_data->>'display_name', split_part(NEW.email, '@', 1)),
-        'citizen' -- Always default to citizen; role elevation must be performed via admin authority
-    );
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-CREATE TRIGGER on_auth_user_created
-    AFTER INSERT ON auth.users
-    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
--- 8. Row Level Security (RLS)
-ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+-- 6. Enable Row Level Security (RLS)
 ALTER TABLE public.reports ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.report_updates ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.report_upvotes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.citizen_queries ENABLE ROW LEVEL SECURITY;
 
--- Helper function to check if current user is admin
-CREATE OR REPLACE FUNCTION public.is_admin()
-RETURNS BOOLEAN AS $$
-BEGIN
-    RETURN EXISTS (
-        SELECT 1 FROM public.profiles
-        WHERE id = auth.uid() AND role = 'admin'
-    );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+-- 7. Access Policies
+CREATE POLICY "Public reports are viewable by everyone" ON public.reports FOR SELECT USING (true);
+CREATE POLICY "Anyone can create reports" ON public.reports FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can update reports" ON public.reports FOR UPDATE USING (true);
 
--- Profiles Policies
-CREATE POLICY "Public profiles are viewable by everyone"
-    ON public.profiles FOR SELECT
-    USING (true);
+CREATE POLICY "Public updates are viewable by everyone" ON public.report_updates FOR SELECT USING (true);
+CREATE POLICY "Anyone can create updates" ON public.report_updates FOR INSERT WITH CHECK (true);
 
-CREATE POLICY "Users can update their own profile"
-    ON public.profiles FOR UPDATE
-    USING (auth.uid() = id)
-    WITH CHECK (auth.uid() = id AND role = (SELECT role FROM public.profiles WHERE id = auth.uid())); -- Prevent self role elevation
+CREATE POLICY "Public can view profiles" ON public.profiles FOR SELECT USING (true);
+CREATE POLICY "Anyone can create profiles" ON public.profiles FOR INSERT WITH CHECK (true);
 
--- Reports Policies
-CREATE POLICY "Public reports are viewable by all users"
-    ON public.reports FOR SELECT
-    USING (true);
+CREATE POLICY "Public can view queries" ON public.citizen_queries FOR SELECT USING (true);
+CREATE POLICY "Anyone can insert queries" ON public.citizen_queries FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can update queries" ON public.citizen_queries FOR UPDATE USING (true);
 
-CREATE POLICY "Citizens can insert their own reports"
-    ON public.reports FOR INSERT
-    WITH CHECK (auth.uid() = user_id OR auth.uid() IS NULL);
+-- 8. Storage Bucket for Issue Photos
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('civic-reports', 'civic-reports', true)
+ON CONFLICT (id) DO NOTHING;
 
-CREATE POLICY "Citizens can update their own pending reports"
-    ON public.reports FOR UPDATE
-    USING (auth.uid() = user_id AND status = 'reported')
-    WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Public Access" ON storage.objects FOR SELECT USING (bucket_id = 'civic-reports');
+CREATE POLICY "Public Uploads" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'civic-reports');
 
-CREATE POLICY "Admins have full update access to reports"
-    ON public.reports FOR ALL
-    USING (public.is_admin());
-
--- Report Updates Policies
-CREATE POLICY "Public can view updates with public messages"
-    ON public.report_updates FOR SELECT
-    USING (public_message IS NOT NULL OR public.is_admin());
-
-CREATE POLICY "Admins can insert and manage report updates"
-    ON public.report_updates FOR ALL
-    USING (public.is_admin());
-
--- Upvotes Policies
-CREATE POLICY "Anyone can view upvote counts"
-    ON public.report_upvotes FOR SELECT
-    USING (true);
-
-CREATE POLICY "Authenticated users can toggle their own upvotes"
-    ON public.report_upvotes FOR INSERT
-    WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can delete their own upvotes"
-    ON public.report_upvotes FOR DELETE
-    USING (auth.uid() = user_id);
-
--- Storage bucket configuration instructions:
--- Bucket name: report-images (Public)
--- Max file size: 5MB
--- Allowed MIME types: image/jpeg, image/png, image/webp
+-- 9. Seed Initial Citizen Queries
+INSERT INTO public.citizen_queries (id, ticket_reference, author_name, category, question, details, status, responder_name, response, upvotes)
+VALUES 
+(
+  'qry-1',
+  'CVL-2026-8812',
+  'Elena Rostova',
+  'pothole',
+  'How long does a severe pothole work order take to be dispatched?',
+  'I reported an 8-inch deep road cavity on Market Street that is damaging bicycle rims. When will the milling crew arrive?',
+  'answered',
+  'Director Sharma (Department of Public Works)',
+  'Critical priority road cavities on arterial transit corridors are scheduled for initial cold-patch asphalt stabilization within 24 to 48 hours of municipal triage. Heavy milling equipment has been deployed for Market Street.',
+  18
+),
+(
+  'qry-2',
+  'CVL-2026-3490',
+  'David Chen',
+  'garbage',
+  'What is the procedure if a commercial garbage dumpster overflows repeatedly every weekend?',
+  'Our local market dumpster overflows by Saturday afternoon attracting pests. Can municipal sanitation increase pickup frequency?',
+  'answered',
+  'Sanitation Bureau Dispatch',
+  'Repeated commercial overflow reports are automatically forwarded to the Bureau of Code Enforcement. A commercial waste audit has been triggered for this sector to enforce larger bin capacity.',
+  12
+),
+(
+  'qry-3',
+  'CVL-2026-9041',
+  'Priya Patel',
+  'streetlight',
+  'Can I report multiple dark streetlights along a block under a single ticket?',
+  'Five consecutive streetlights along 4th Avenue are dead, creating a 200-meter dark corridor.',
+  'answered',
+  'Public Infrastructure Triage',
+  'Yes! When multiple adjacent streetlights fail simultaneously, it usually indicates an electrical circuit breaker or underground feeder cable fault rather than individual bulbs. Note "Corridor failure" in the description so electrical grid teams are assigned.',
+  24
+)
+ON CONFLICT (id) DO NOTHING;

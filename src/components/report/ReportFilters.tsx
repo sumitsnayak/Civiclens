@@ -52,32 +52,32 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
     filters.sortBy !== 'newest';
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm space-y-4">
+    <div className="bg-white border border-[#E7E2ED] rounded-2xl p-4 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)] space-y-3">
       {/* Top Search & Dropdowns Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
         {/* Search */}
         <div className="lg:col-span-2 relative">
           <input
             type="text"
             value={filters.searchQuery || ''}
             onChange={handleSearchChange}
-            placeholder="Search by title, location or code..."
-            className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-electric-500"
+            placeholder="Search by title, location or reference code..."
+            className="w-full pl-8 pr-3 py-2 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white transition-all"
           />
-          <Search size={16} className="absolute left-3 top-2.5 text-slate-400" />
+          <Search size={14} className="absolute left-2.5 top-2.5 text-slate-400" />
         </div>
 
-        {/* Severity */}
+        {/* Category */}
         <div>
           <select
-            value={filters.severity || 'all'}
-            onChange={handleSeverityChange}
-            className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-electric-500"
+            value={filters.category || 'all'}
+            onChange={(e) => handleCategorySelect(e.target.value as any)}
+            className="w-full px-3 py-2 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white transition-all"
           >
-            <option value="all">All Severities</option>
-            {Object.entries(SEVERITY_CONFIG).map(([key, config]) => (
+            <option value="all">All Categories</option>
+            {Object.entries(CATEGORIES_CONFIG).map(([key, config]) => (
               <option key={key} value={key}>
-                {config.label} Priority
+                {config.label}
               </option>
             ))}
           </select>
@@ -88,7 +88,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           <select
             value={filters.status || 'all'}
             onChange={handleStatusChange}
-            className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-electric-500"
+            className="w-full px-3 py-2 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white transition-all"
           >
             <option value="all">All Statuses</option>
             {Object.entries(STATUS_CONFIG).map(([key, config]) => (
@@ -104,67 +104,58 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           <select
             value={filters.sortBy || 'newest'}
             onChange={handleSortChange}
-            className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-electric-500"
+            className="w-full px-3 py-2 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white transition-all"
           >
-            <option value="newest">Sort: Newest First</option>
-            <option value="oldest">Sort: Oldest First</option>
-            <option value="highest_priority">Sort: Highest Priority Score</option>
-            <option value="most_upvoted">Sort: Most Civic Agreements</option>
+            <option value="newest">Newest First</option>
+            <option value="priority">Highest Priority</option>
+            <option value="most_upvoted">Most Agreed</option>
           </select>
         </div>
       </div>
 
-      {/* Category Pills Slider */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none pt-1">
-        <button
-          type="button"
-          onClick={() => handleCategorySelect('all')}
-          className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-            !filters.category || filters.category === 'all'
-              ? 'bg-midnight-900 text-white shadow-sm'
-              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
-          }`}
-        >
-          All Categories
-        </button>
-
-        {Object.entries(CATEGORIES_CONFIG).map(([key, config]) => {
-          const isSelected = filters.category === key;
-          return (
+      {/* Category Pills & Count Row */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#F2EEF6]">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <button
+            onClick={() => handleCategorySelect('all')}
+            className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
+              filters.category === 'all'
+                ? 'bg-[#442646] text-white shadow-2xs'
+                : 'bg-[#F5F4F8] text-slate-600 hover:bg-[#EDE8F2]'
+            }`}
+          >
+            All
+          </button>
+          {Object.entries(CATEGORIES_CONFIG).map(([key, config]) => (
             <button
               key={key}
-              type="button"
               onClick={() => handleCategorySelect(key as ReportCategory)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-                isSelected
-                  ? 'bg-electric-500 text-midnight-950 shadow-sm font-bold'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+              className={`px-3 py-1 rounded-xl text-xs font-medium transition-all ${
+                filters.category === key
+                  ? 'bg-[#442646] text-white font-bold shadow-2xs'
+                  : 'bg-[#F5F4F8] text-slate-600 hover:bg-[#EDE8F2]'
               }`}
             >
-              <span>{config.label}</span>
+              #{config.label.toLowerCase().replace(/[^a-z0-9]/g, '')}
             </button>
-          );
-        })}
+          ))}
+        </div>
 
-        {isFiltered && (
-          <button
-            type="button"
-            onClick={handleReset}
-            className="ml-auto inline-flex items-center gap-1 px-2.5 py-1 text-xs text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors shrink-0"
-          >
-            <RotateCcw size={12} />
-            <span>Reset</span>
-          </button>
-        )}
-      </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold text-slate-500">
+            {totalResults} {totalResults === 1 ? 'Report' : 'Reports'} Found
+          </span>
 
-      {/* Result Count Info */}
-      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800">
-        <span>
-          Showing <strong className="text-slate-800 dark:text-slate-200">{totalResults}</strong> civic{' '}
-          {totalResults === 1 ? 'problem' : 'problems'}
-        </span>
-        {isFiltered && <span className="text-electric-600 font-medium">Filtered results</span>}
+          {isFiltered && (
+            <button
+              onClick={handleReset}
+              className="inline-flex items-center gap-1 text-xs font-bold text-[#552B58] hover:text-[#381B3B]"
+            >
+              <RotateCcw size={12} />
+              <span>Reset</span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

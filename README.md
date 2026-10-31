@@ -110,3 +110,4 @@ CivicLens includes a built-in role switcher in the navigation bar to allow judge
 npm run build
 ```
 The optimized bundle is output to `dist/`, ready for zero-config deployment to Vercel, Netlify, or Cloudflare Pages.
+

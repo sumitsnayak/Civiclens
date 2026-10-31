@@ -176,3 +176,4 @@ export const STATUS_CONFIG: Record<
     description: 'Duplicate report, private property, or outside civic jurisdiction',
   },
 };
+

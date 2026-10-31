@@ -222,3 +222,4 @@ export const INITIAL_DEMO_REPORTS: Report[] = [
     ],
   },
 ];
+

@@ -16,7 +16,7 @@ import {
   AreaChart, 
   Area 
 } from 'recharts';
-import { BarChart3, TrendingUp, Clock, CheckCircle2, ShieldAlert, Award } from 'lucide-react';
+import { Clock, CheckCircle, TrendingUp, AlertTriangle } from 'lucide-react';
 
 export const CivicAnalyticsPage: React.FC = () => {
   const [stats, setStats] = useState<CivicStats | null>(null);
@@ -31,106 +31,93 @@ export const CivicAnalyticsPage: React.FC = () => {
 
   if (loading || !stats) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 text-center text-xs text-slate-400">
-        Loading civic analytics...
+      <div className="max-w-7xl mx-auto px-4 py-16 text-center text-xs font-medium text-slate-500">
+        Loading civic analytics telemetry...
       </div>
     );
   }
 
-  // Format data for Recharts Pie (Categories)
   const categoryData = Object.entries(stats.category_distribution).map(([cat, count]) => ({
     name: CATEGORIES_CONFIG[cat as keyof typeof CATEGORIES_CONFIG]?.label || cat,
     value: count,
-    color: CATEGORIES_CONFIG[cat as keyof typeof CATEGORIES_CONFIG]?.color || '#64748B',
+    color: CATEGORIES_CONFIG[cat as keyof typeof CATEGORIES_CONFIG]?.color || '#552B58',
   })).filter(d => d.value > 0);
 
-  // Format data for Recharts Bar (Severities)
   const severityData = [
-    { name: 'Low', count: stats.severity_distribution.low, color: '#94A3B8' },
-    { name: 'Medium', count: stats.severity_distribution.medium, color: '#F59E0B' },
-    { name: 'High', count: stats.severity_distribution.high, color: '#EA580C' },
-    { name: 'Critical', count: stats.severity_distribution.critical, color: '#EF4444' },
+    { name: 'Low', count: stats.severity_distribution.low, color: '#64748b' },
+    { name: 'Medium', count: stats.severity_distribution.medium, color: '#f59e0b' },
+    { name: 'High', count: stats.severity_distribution.high, color: '#ea580c' },
+    { name: 'Critical', count: stats.severity_distribution.critical, color: '#e11d48' },
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
-      {/* Analytics Header */}
-      <div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-electric-500/10 text-electric-600 dark:text-electric-400 text-xs font-bold border border-electric-500/20 mb-2">
-          <BarChart3 size={14} />
-          <span>Real-Time Smart City Metrics</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-          Civic Issue Analytics & Resolution Trends
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      {/* Header */}
+      <div className="border-b border-[#E7E2ED] pb-4">
+        <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+          Civic Analytics & Resolution Metrics
         </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Aggregated municipal intelligence derived from verified citizen reports and work-order milestones
+        <p className="text-xs text-slate-500 mt-0.5">
+          Real-time workload distribution, category frequencies, and municipal SLA performance
         </p>
       </div>
 
-      {/* SLA Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-1">
-          <div className="text-xs text-slate-500 flex items-center justify-between">
-            <span>Average Resolution Time</span>
-            <Clock size={16} className="text-electric-500" />
-          </div>
-          <div className="text-3xl font-black text-slate-900 dark:text-white">
-            {stats.avg_resolution_days} Days
-          </div>
-          <div className="text-[11px] text-emerald-600 font-semibold">
-            ↓ 18% improvement vs prior quarter
-          </div>
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-5 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-xs font-semibold text-slate-500">Total Submissions</div>
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">{stats.total}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">Logged in registry</div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-1">
-          <div className="text-xs text-slate-500 flex items-center justify-between">
-            <span>Overall Resolution Rate</span>
-            <CheckCircle2 size={16} className="text-emerald-500" />
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-5 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-xs font-bold text-[#B55D1C] flex items-center gap-1">
+            <Clock size={13} />
+            <span>Active Workload</span>
           </div>
-          <div className="text-3xl font-black text-slate-900 dark:text-white">
-            {stats.total > 0 ? Math.round((stats.resolved / stats.total) * 100) : 0}%
-          </div>
-          <div className="text-[11px] text-slate-400">
-            {stats.resolved} of {stats.total} closed
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-1">
-          <div className="text-xs text-slate-500 flex items-center justify-between">
-            <span>Active Hazard Load</span>
-            <TrendingUp size={16} className="text-purple-500" />
-          </div>
-          <div className="text-3xl font-black text-purple-600">
+          <div className="text-2xl sm:text-3xl font-black text-[#B55D1C] mt-1">
             {stats.in_progress + stats.under_review}
           </div>
-          <div className="text-[11px] text-slate-400">
-            Currently under remediation
+          <div className="text-[11px] text-slate-400 mt-0.5">Review & field repair</div>
+        </div>
+
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-5 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-xs font-bold text-[#247A48] flex items-center gap-1">
+            <CheckCircle size={13} />
+            <span>Verified Resolved</span>
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-[#247A48] mt-1">
+            {stats.resolved}
+          </div>
+          <div className="text-[11px] text-slate-400 mt-0.5">
+            {Math.round((stats.resolved / (stats.total || 1)) * 100)}% resolution rate
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm space-y-1">
-          <div className="text-xs text-slate-500 flex items-center justify-between">
-            <span>Critical Priority Issues</span>
-            <ShieldAlert size={16} className="text-rose-500" />
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-5 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-xs font-semibold text-slate-500 flex items-center gap-1">
+            <TrendingUp size={13} className="text-[#552B58]" />
+            <span>Avg. Resolution</span>
           </div>
-          <div className="text-3xl font-black text-rose-500">
-            {stats.critical_count}
+          <div className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
+            {stats.avg_resolution_days} Days
           </div>
-          <div className="text-[11px] text-slate-400">
-            Immediate safety risks
-          </div>
+          <div className="text-[11px] text-slate-400 mt-0.5">SLA turnaround time</div>
         </div>
       </div>
 
-      {/* Row 1 Charts: Category Donut & Severity Bar */}
+      {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Categories Breakdown */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-            Reports by Issue Category
-          </h3>
-          <div className="h-64 w-full">
+        {/* Category Breakdown */}
+        <div className="bg-white border border-[#E7E2ED] rounded-3xl p-5 sm:p-6 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)] space-y-4">
+          <div>
+            <h3 className="text-sm font-bold text-slate-900">
+              Issues by Category
+            </h3>
+            <p className="text-[11px] text-slate-400">Distribution across municipal service areas</p>
+          </div>
+
+          <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -138,7 +125,7 @@ export const CivicAnalyticsPage: React.FC = () => {
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
-                  outerRadius={90}
+                  outerRadius={95}
                   paddingAngle={4}
                   dataKey="value"
                 >
@@ -148,128 +135,65 @@ export const CivicAnalyticsPage: React.FC = () => {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0B132B',
-                    borderColor: '#1C2541',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #E7E2ED',
                     borderRadius: '12px',
-                    color: '#fff',
-                    fontSize: '12px',
+                    fontSize: '11px',
+                    color: '#1E1B24',
+                    boxShadow: '0 4px 12px rgba(44,25,48,0.08)',
                   }}
                 />
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex flex-wrap gap-2 justify-center text-xs">
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-[11px]">
             {categoryData.map((item) => (
-              <span key={item.name} className="inline-flex items-center gap-1.5 text-[11px] text-slate-600 dark:text-slate-300">
+              <div key={item.name} className="flex items-center gap-1.5 font-medium text-slate-600">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: item.color }} />
                 <span>{item.name} ({item.value})</span>
-              </span>
+              </div>
             ))}
           </div>
         </div>
 
-        {/* Severity Distribution */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-            Distribution by Severity Rating
-          </h3>
-          <div className="h-64 w-full">
+        {/* Severity Breakdown */}
+        <div className="bg-white border border-[#E7E2ED] rounded-3xl p-5 sm:p-6 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)] space-y-4">
+          <div>
+            <h3 className="text-sm font-bold text-slate-900">
+              Severity Distribution
+            </h3>
+            <p className="text-[11px] text-slate-400">Hazard assessment and prioritization ranking</p>
+          </div>
+
+          <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={severityData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.15} />
-                <XAxis dataKey="name" fontSize={11} stroke="#94A3B8" />
-                <YAxis fontSize={11} stroke="#94A3B8" allowDecimals={false} />
+              <BarChart data={severityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#F0EDF5" vertical={false} />
+                <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} />
+                <YAxis stroke="#94A3B8" fontSize={11} allowDecimals={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0B132B',
-                    borderColor: '#1C2541',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #E7E2ED',
                     borderRadius: '12px',
-                    color: '#fff',
-                    fontSize: '12px',
+                    fontSize: '11px',
+                    color: '#1E1B24',
+                    boxShadow: '0 4px 12px rgba(44,25,48,0.08)',
                   }}
                 />
-                <Bar dataKey="count" radius={[6, 6, 0, 0]}>
+                <Bar dataKey="count" radius={[8, 8, 0, 0]}>
                   {severityData.map((entry, index) => (
-                    <Cell key={`bar-${index}`} fill={entry.color} />
+                    <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="text-[11px] text-slate-400 text-center">
-            Critical priority hazards trigger expedited same-day municipal inspection
-          </div>
-        </div>
-      </div>
 
-      {/* Row 2 Chart: Submissions & Resolutions Timeline */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-              Civic Ticket Intake vs Resolution Pace (Past 7 Days)
-            </h3>
-            <p className="text-xs text-slate-500">
-              Comparative volume of newly registered problems versus verified work-order completions
-            </p>
+          <div className="flex items-center justify-center gap-4 text-[11px] text-slate-500 pt-2 font-medium">
+            <span>Critical issues receive immediate supervisor dispatch triage within 2 hours</span>
           </div>
-          <div className="flex items-center gap-4 text-xs font-semibold">
-            <span className="flex items-center gap-1.5 text-blue-500">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-              <span>Reported Intake</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-emerald-500">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-              <span>Resolved Closed</span>
-            </span>
-          </div>
-        </div>
-
-        <div className="h-72 w-full pt-4">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={stats.timeline_data}>
-              <defs>
-                <linearGradient id="colorSubmitted" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.0} />
-                </linearGradient>
-                <linearGradient id="colorResolved" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#06D6A0" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#06D6A0" stopOpacity={0.0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.15} />
-              <XAxis dataKey="date" fontSize={11} stroke="#94A3B8" />
-              <YAxis fontSize={11} stroke="#94A3B8" allowDecimals={false} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#0B132B',
-                  borderColor: '#1C2541',
-                  borderRadius: '12px',
-                  color: '#fff',
-                  fontSize: '12px',
-                }}
-              />
-              <Area
-                type="monotone"
-                dataKey="submitted"
-                stroke="#3B82F6"
-                strokeWidth={2}
-                fillOpacity={1}
-                fill="url(#colorSubmitted)"
-                name="Intake Submissions"
-              />
-              <Area
-                type="monotone"
-                dataKey="resolved"
-                stroke="#06D6A0"
-                strokeWidth={2}
-                fillOpacity={1}
-                fill="url(#colorResolved)"
-                name="Resolved & Repaired"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
         </div>
       </div>
     </div>

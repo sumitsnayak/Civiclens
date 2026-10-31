@@ -8,39 +8,38 @@ export default {
   theme: {
     extend: {
       colors: {
-        midnight: {
-          50: '#f0f4fc',
-          100: '#e1e8f8',
-          200: '#c5d5f2',
-          300: '#9cbbe8',
-          400: '#6d9cdc',
-          500: '#4c7ed0',
-          600: '#3863b7',
-          700: '#2f4f96',
-          800: '#1C2541',
-          900: '#0B132B',
-          950: '#060B18',
+        canvas: '#F5F4F8',
+        brand: {
+          50: '#FAF7FB',
+          100: '#F3EDF5',
+          200: '#E6DAEA',
+          300: '#D1BED7',
+          400: '#AA82B2',
+          500: '#824987',
+          600: '#68356D',
+          700: '#542858',
+          800: '#442646', // Dribbble SilentPing executive plum
+          900: '#341B36',
+          950: '#231125',
         },
-        electric: {
-          50: '#eafff8',
-          100: '#cbfbee',
-          200: '#9bf7de',
-          300: '#5eefc9',
-          400: '#2be0b1',
-          500: '#06D6A0',
-          600: '#00af82',
-          700: '#008b6a',
-          800: '#036d54',
-          900: '#055a47',
+        pill: {
+          progressBg: '#EDE5F0',
+          progressText: '#552B58',
+          pendingBg: '#FDF0E6',
+          pendingText: '#C06A28',
+          resolvedBg: '#E8F6ED',
+          resolvedText: '#247A48',
+          rejectedBg: '#FCECEE',
+          rejectedText: '#B92F45',
         }
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       boxShadow: {
-        'glow-teal': '0 0 25px -5px rgba(6, 214, 160, 0.35)',
-        'glow-blue': '0 0 25px -5px rgba(59, 130, 246, 0.35)',
-        'glass': '0 8px 32px 0 rgba(11, 19, 43, 0.08)',
+        'card': '0 4px 20px -2px rgba(44, 25, 48, 0.04), 0 2px 6px -1px rgba(44, 25, 48, 0.02)',
+        'card-hover': '0 12px 28px -4px rgba(44, 25, 48, 0.08), 0 4px 10px -2px rgba(44, 25, 48, 0.04)',
+        'float': '0 16px 36px -4px rgba(44, 25, 48, 0.12)',
       }
     },
   },

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Report, ReportCategory, ReportSeverity, ReportStatus } from '../../types';
 import { STATUS_CONFIG, CATEGORIES_CONFIG, SEVERITY_CONFIG } from '../../lib/constants';
-import { X, CheckCircle, AlertTriangle, ShieldCheck, MessageSquare, Lock } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 
 interface StatusChangeModalProps {
   report: Report;
@@ -51,37 +51,32 @@ export const StatusChangeModal: React.FC<StatusChangeModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-midnight-950/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-xl w-full shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+      <div className="bg-white border border-[#E7E2ED] rounded-3xl max-w-lg w-full shadow-[0_16px_36px_-4px_rgba(44,25,48,0.15)] overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-500">
-              <ShieldCheck size={20} />
-            </div>
-            <div>
-              <h3 className="font-bold text-slate-900 dark:text-white text-base">
-                Manage Ticket #{report.reference_code}
-              </h3>
-              <p className="text-xs text-slate-500 truncate max-w-sm">{report.title}</p>
-            </div>
+        <div className="px-6 py-4 border-b border-[#F0EDF5] flex items-center justify-between">
+          <div>
+            <h3 className="font-bold text-slate-900 text-sm">
+              Update Ticket #{report.reference_code}
+            </h3>
+            <p className="text-xs text-slate-500 truncate max-w-xs">{report.title}</p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-900 hover:bg-[#F5F3F8] transition-colors"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
-        {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           {/* Status Selection */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-              Update Status Workflow *
+            <label className="block font-bold text-slate-700 mb-1.5 uppercase text-[11px]">
+              Status Pipeline *
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
               {Object.entries(STATUS_CONFIG).map(([key, config]) => {
                 const isSelected = selectedStatus === key;
                 return (
@@ -89,15 +84,15 @@ export const StatusChangeModal: React.FC<StatusChangeModalProps> = ({
                     key={key}
                     type="button"
                     onClick={() => setSelectedStatus(key as ReportStatus)}
-                    className={`p-2.5 rounded-xl border text-xs font-semibold text-left transition-all ${
+                    className={`p-2.5 rounded-xl border text-left font-bold transition-all ${
                       isSelected
-                        ? 'border-electric-500 bg-electric-500/10 text-slate-900 dark:text-white shadow-sm ring-1 ring-electric-500'
-                        : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'
+                        ? 'border-[#442646] bg-[#442646] text-white shadow-xs'
+                        : 'border-[#E7E2ED] bg-[#F5F4F8] text-slate-700 hover:bg-[#EDE8F2]'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-bold">{config.label}</span>
-                      {isSelected && <CheckCircle size={14} className="text-electric-500" />}
+                      <span>{config.label}</span>
+                      {isSelected && <Check size={12} />}
                     </div>
                   </button>
                 );
@@ -106,15 +101,15 @@ export const StatusChangeModal: React.FC<StatusChangeModalProps> = ({
           </div>
 
           {/* Category & Severity Tuning */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <div className="grid grid-cols-2 gap-2.5">
             <div>
-              <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+              <label className="block font-bold text-slate-700 mb-1">
                 Category
               </label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value as ReportCategory)}
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-electric-500"
+                className="w-full px-3 py-2 bg-[#F5F4F8] border border-[#E7E2ED] text-slate-800 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white"
               >
                 {Object.entries(CATEGORIES_CONFIG).map(([key, config]) => (
                   <option key={key} value={key}>
@@ -125,13 +120,13 @@ export const StatusChangeModal: React.FC<StatusChangeModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
-                Severity Level
+              <label className="block font-bold text-slate-700 mb-1">
+                Severity
               </label>
               <select
                 value={selectedSeverity}
                 onChange={(e) => setSelectedSeverity(e.target.value as ReportSeverity)}
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-electric-500"
+                className="w-full px-3 py-2 bg-[#F5F4F8] border border-[#E7E2ED] text-slate-800 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white"
               >
                 {Object.entries(SEVERITY_CONFIG).map(([key, config]) => (
                   <option key={key} value={key}>
@@ -144,49 +139,47 @@ export const StatusChangeModal: React.FC<StatusChangeModalProps> = ({
 
           {/* Public Progress Note */}
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-              <MessageSquare size={14} className="text-electric-500" />
-              <span>Public Citizen Update (Visible on Report Timeline)</span>
+            <label className="block font-bold text-slate-700 mb-1">
+              Public Dispatch Note (Visible to citizens)
             </label>
             <textarea
               rows={2}
               value={publicMessage}
               onChange={(e) => setPublicMessage(e.target.value)}
-              placeholder="e.g. Work crew dispatched to clear drain grate. Estimated completion by tomorrow morning."
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-electric-500"
+              placeholder="e.g. Work crew deployed with asphalt repair equipment."
+              className="w-full px-3.5 py-2.5 bg-[#F5F4F8] border border-[#E7E2ED] text-slate-900 placeholder-slate-400 rounded-xl leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white"
             />
           </div>
 
           {/* Internal Administration Note */}
           <div>
-            <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-              <Lock size={14} className="text-amber-500" />
-              <span>Internal Administrative Note (Staff & Dispatch Only)</span>
+            <label className="block font-bold text-slate-700 mb-1 text-[11px]">
+              Internal Dispatch Log (Restricted to staff)
             </label>
             <input
               type="text"
               value={internalNote}
               onChange={(e) => setInternalNote(e.target.value)}
-              placeholder="e.g. Work Order #RD-492 assigned to Team Charlie; asphalt material requisition approved."
-              className="w-full px-3 py-2 bg-amber-500/5 border border-amber-500/20 rounded-xl text-xs focus:ring-2 focus:ring-amber-500"
+              placeholder="e.g. Work Order #RD-8924 assigned to Municipal Team B."
+              className="w-full px-3.5 py-2.5 bg-[#F5F4F8] border border-[#E7E2ED] text-[#8C4311] placeholder-slate-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white"
             />
           </div>
 
           {/* Footer Buttons */}
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2">
+          <div className="pt-3 border-t border-[#F0EDF5] flex items-center justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="px-4 py-2 rounded-xl border border-[#E7E2ED] text-slate-600 hover:text-slate-900 hover:bg-[#F5F3F8] font-bold"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-5 py-2 rounded-xl bg-midnight-900 hover:bg-midnight-800 dark:bg-electric-500 dark:hover:bg-electric-400 dark:text-midnight-950 text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5"
+              className="px-5 py-2 rounded-xl bg-[#442646] hover:bg-[#341B36] text-white font-bold shadow-xs hover:shadow-sm transition-all"
             >
-              {isSubmitting ? 'Saving...' : 'Apply Status Update'}
+              {isSubmitting ? 'Saving...' : 'Apply Update'}
             </button>
           </div>
         </form>

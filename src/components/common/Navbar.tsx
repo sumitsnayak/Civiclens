@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../lib/authStore';
+import { BrandLogo } from './BrandLogo';
 import { 
-  PlusCircle, 
+  Plus, 
   Map, 
-  BarChart3, 
-  ShieldCheck, 
+  BarChart2, 
+  Shield, 
   User, 
   LogOut, 
   Menu, 
   X, 
-  CheckCircle2, 
-  Eye, 
-  Sparkles,
-  ChevronDown
+  ChevronDown,
+  Info,
+  Check,
+  HelpCircle
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -31,229 +32,214 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-midnight-950/90 backdrop-blur-md border-b border-midnight-800 text-white transition-all">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#E7E3EC] text-slate-900 shadow-[0_1px_4px_rgba(44,25,48,0.03)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand Logo & Wordmark */}
           <div 
             onClick={() => handleNavClick('landing')}
-            className="flex items-center gap-2.5 cursor-pointer group"
+            className="cursor-pointer group py-1"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-electric-500 to-teal-300 flex items-center justify-center shadow-glow-teal group-hover:scale-105 transition-transform">
-              <Eye className="w-5 h-5 text-midnight-950" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-xl tracking-tight text-white">Civic<span className="text-electric-500">Lens</span></span>
-                <span className="text-[10px] uppercase font-bold tracking-widest px-1.5 py-0.5 rounded bg-electric-500/20 text-electric-400 border border-electric-500/30">
-                  AI
-                </span>
-              </div>
-              <p className="text-[10px] text-slate-400 hidden sm:block -mt-1">See. Report. Track.</p>
-            </div>
+            <BrandLogo size="md" />
           </div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-1.5">
             <button
               onClick={() => handleNavClick('landing')}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                currentTab === 'landing' ? 'bg-midnight-800 text-electric-400 font-semibold' : 'text-slate-300 hover:text-white hover:bg-midnight-800/50'
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                currentTab === 'landing' 
+                  ? 'bg-[#EDE5F0] text-[#552B58]' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-[#F5F3F8]'
               }`}
             >
-              Home
+              Overview
             </button>
             <button
               onClick={() => handleNavClick('explorer')}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
-                currentTab === 'explorer' ? 'bg-midnight-800 text-electric-400 font-semibold' : 'text-slate-300 hover:text-white hover:bg-midnight-800/50'
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                currentTab === 'explorer' 
+                  ? 'bg-[#EDE5F0] text-[#552B58]' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-[#F5F3F8]'
               }`}
             >
-              <Map size={15} />
-              <span>Explore Issues</span>
+              <Map size={14} className={currentTab === 'explorer' ? 'text-[#552B58]' : 'text-slate-400'} />
+              <span>Issues Map</span>
+            </button>
+            <button
+              onClick={() => handleNavClick('citizen-dashboard')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                currentTab === 'citizen-dashboard' 
+                  ? 'bg-[#EDE5F0] text-[#552B58]' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-[#F5F3F8]'
+              }`}
+            >
+              <span>My Reports</span>
             </button>
             <button
               onClick={() => handleNavClick('analytics')}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
-                currentTab === 'analytics' ? 'bg-midnight-800 text-electric-400 font-semibold' : 'text-slate-300 hover:text-white hover:bg-midnight-800/50'
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                currentTab === 'analytics' 
+                  ? 'bg-[#EDE5F0] text-[#552B58]' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-[#F5F3F8]'
               }`}
             >
-              <BarChart3 size={15} />
-              <span>Civic Analytics</span>
+              <BarChart2 size={14} className={currentTab === 'analytics' ? 'text-[#552B58]' : 'text-slate-400'} />
+              <span>Analytics</span>
             </button>
-            <button
-              onClick={() => handleNavClick('about')}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                currentTab === 'about' ? 'bg-midnight-800 text-electric-400 font-semibold' : 'text-slate-300 hover:text-white hover:bg-midnight-800/50'
-              }`}
-            >
-              How It Works
-            </button>
+
             {isAdmin && (
               <button
                 onClick={() => handleNavClick('admin')}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 text-amber-400 ${
-                  currentTab === 'admin' ? 'bg-amber-400/20 text-amber-300 font-bold border border-amber-400/30' : 'hover:bg-midnight-800/50'
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  currentTab === 'admin' 
+                    ? 'bg-[#FDF0E6] text-[#B55D1C] border border-[#F6D5BD]' 
+                    : 'text-[#B55D1C] hover:bg-[#FDF0E6]/60'
                 }`}
               >
-                <ShieldCheck size={15} />
+                <Shield size={13} />
                 <span>Admin Console</span>
               </button>
             )}
-          </nav>
 
-          {/* Right Action Bar */}
-          <div className="hidden sm:flex items-center gap-3">
-            {/* Primary Action: Report Issue Button */}
             <button
-              onClick={() => handleNavClick('report')}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-electric-500 hover:bg-electric-400 text-midnight-950 font-bold text-sm shadow-glow-teal hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+              onClick={() => handleNavClick('queries')}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                currentTab === 'queries' 
+                  ? 'bg-[#EDE5F0] text-[#552B58]' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-[#F5F3F8]'
+              }`}
             >
-              <PlusCircle size={16} />
-              <span>Report an Issue</span>
+              <HelpCircle size={13} className={currentTab === 'queries' ? 'text-[#552B58]' : 'text-slate-400'} />
+              <span>Queries</span>
             </button>
 
-            {/* User Account / Role Switcher Popover */}
+            <button
+              onClick={() => handleNavClick('about')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                currentTab === 'about' 
+                  ? 'bg-[#EDE5F0] text-[#552B58]' 
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-[#F5F3F8]'
+              }`}
+            >
+              <Info size={13} className="text-slate-400" />
+              <span>About</span>
+            </button>
+          </nav>
+
+          {/* Right Action & User Controls */}
+          <div className="flex items-center gap-2.5">
+            {/* Primary Action Button (Dribbble Signature Plum) */}
+            <button
+              onClick={() => handleNavClick('report')}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#442646] hover:bg-[#361D38] text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99]"
+            >
+              <Plus size={15} className="stroke-[2.5]" />
+              <span className="hidden sm:inline">Report Issue</span>
+              <span className="sm:hidden">Report</span>
+            </button>
+
+            {/* Evaluator Role Selector & Auth Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-midnight-900 border border-midnight-800 hover:border-slate-700 transition-colors text-left"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-[#F5F4F8] hover:bg-[#EDE8F2] border border-[#E7E2ED] text-xs transition-colors"
+                title="Switch demo role"
               >
-                <div className="w-7 h-7 rounded-lg bg-midnight-800 flex items-center justify-center text-xs font-bold text-electric-400 border border-midnight-700 overflow-hidden">
-                  {user?.avatar_url ? (
-                    <img src={user.avatar_url} alt={user.display_name} className="w-full h-full object-cover" />
-                  ) : (
-                    <User size={14} />
-                  )}
+                <div className="w-6 h-6 rounded-full bg-[#EDE5F0] border border-[#DFCEE2] text-[#552B58] flex items-center justify-center font-bold text-[11px] shrink-0">
+                  {user?.display_name?.charAt(0) || 'U'}
                 </div>
-                <div className="hidden lg:block text-xs leading-tight">
-                  <div className="font-semibold text-white truncate max-w-[100px]">
-                    {user ? user.display_name : 'Guest Visitor'}
-                  </div>
-                  <div className="text-[10px] text-electric-400 font-mono capitalize">
-                    {role} role
-                  </div>
+                <div className="hidden lg:flex flex-col text-left leading-tight">
+                  <span className="font-bold text-slate-900 text-[11px] truncate max-w-[100px]">
+                    {user?.display_name || 'Guest'}
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-medium capitalize">
+                    {role} Role
+                  </span>
                 </div>
-                <ChevronDown size={14} className="text-slate-400" />
+                <ChevronDown size={12} className="text-slate-400" />
               </button>
 
               {userDropdownOpen && (
                 <div 
-                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-midnight-900 border border-midnight-700 shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
-                  onMouseLeave={() => setUserDropdownOpen(false)}
+                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-[#E7E2ED] shadow-[0_14px_30px_-4px_rgba(44,25,48,0.15)] py-2 z-50 animate-in fade-in zoom-in-95 duration-100"
+                  onClick={() => setUserDropdownOpen(false)}
                 >
-                  <div className="px-3 py-2 border-b border-midnight-800">
-                    <p className="text-xs font-semibold text-white">{user?.display_name || 'Guest'}</p>
-                    <p className="text-[11px] text-slate-400 truncate">{user?.email || 'Demo Mode'}</p>
-                  </div>
-
-                  <div className="py-1">
-                    <button
-                      onClick={() => {
-                        handleNavClick('citizen-dashboard');
-                        setUserDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-3 py-2 text-xs font-medium text-slate-200 hover:bg-midnight-800 rounded-lg flex items-center gap-2"
-                    >
-                      <User size={14} className="text-electric-400" />
-                      <span>Citizen Dashboard</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        handleNavClick('admin');
-                        setUserDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-3 py-2 text-xs font-medium text-amber-300 hover:bg-midnight-800 rounded-lg flex items-center gap-2"
-                    >
-                      <ShieldCheck size={14} className="text-amber-400" />
-                      <span>Admin Management Portal</span>
-                    </button>
-                  </div>
-
-                  {/* Demo Role Quick Switcher */}
-                  <div className="pt-2 border-t border-midnight-800">
-                    <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      ⚡ Quick Role Switcher
+                  <div className="px-3.5 py-2 border-b border-[#F0EDF5]">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Active Profile
                     </div>
-                    <div className="grid grid-cols-2 gap-1.5 p-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          signInAsDemoUser('citizen');
-                          setUserDropdownOpen(false);
-                        }}
-                        className={`px-2 py-1.5 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1 border transition-colors ${
-                          role === 'citizen'
-                            ? 'bg-electric-500/20 text-electric-400 border-electric-500/50'
-                            : 'bg-midnight-800/80 text-slate-300 border-midnight-700 hover:bg-midnight-800'
-                        }`}
-                      >
-                        <User size={12} />
-                        <span>Citizen</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          signInAsDemoUser('admin');
-                          setUserDropdownOpen(false);
-                        }}
-                        className={`px-2 py-1.5 rounded-lg text-[11px] font-semibold flex items-center justify-center gap-1 border transition-colors ${
-                          role === 'admin'
-                            ? 'bg-amber-500/20 text-amber-400 border-amber-500/50'
-                            : 'bg-midnight-800/80 text-slate-300 border-midnight-700 hover:bg-midnight-800'
-                        }`}
-                      >
-                        <ShieldCheck size={12} />
-                        <span>Admin</span>
-                      </button>
+                    <div className="font-bold text-xs text-slate-900 mt-0.5 truncate">
+                      {user?.display_name || 'Guest Citizen'}
+                    </div>
+                    <div className="text-[11px] text-slate-500 truncate">
+                      {user?.email || 'citizen@civiclens.local'}
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-midnight-800">
-                    {isAuthenticated ? (
-                      <button
-                        onClick={() => {
-                          signOut();
-                          setUserDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-3 py-1.5 text-xs text-rose-400 hover:bg-rose-950/30 rounded-lg flex items-center gap-2"
-                      >
-                        <LogOut size={13} />
-                        <span>Sign Out</span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          handleNavClick('auth');
-                          setUserDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-3 py-1.5 text-xs text-electric-400 hover:bg-electric-950/30 rounded-lg flex items-center gap-2"
-                      >
+                  <div className="p-1.5 space-y-1">
+                    <div className="px-2 pt-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Evaluator Role Switcher
+                    </div>
+                    
+                    <button
+                      onClick={() => signInAsDemoUser('citizen')}
+                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-left transition-colors ${
+                        role === 'citizen' 
+                          ? 'bg-[#EDE5F0] text-[#552B58] font-bold' 
+                          : 'text-slate-700 hover:bg-[#F7F5FA]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
                         <User size={13} />
-                        <span>Sign In with Email</span>
-                      </button>
-                    )}
+                        <div>
+                          <div className="leading-tight">Marcus Vance</div>
+                          <div className="text-[10px] text-slate-500 font-normal">Citizen Submitter</div>
+                        </div>
+                      </div>
+                      {role === 'citizen' && <Check size={13} className="text-[#552B58]" />}
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        signInAsDemoUser('admin');
+                        onNavigate('admin');
+                      }}
+                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-left transition-colors ${
+                        role === 'admin' 
+                          ? 'bg-[#FDF0E6] text-[#B55D1C] font-bold' 
+                          : 'text-slate-700 hover:bg-[#F7F5FA]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Shield size={13} />
+                        <div>
+                          <div className="leading-tight">Director Sharma</div>
+                          <div className="text-[10px] text-slate-500 font-normal">Municipal Administrator</div>
+                        </div>
+                      </div>
+                      {role === 'admin' && <Check size={13} className="text-[#B55D1C]" />}
+                    </button>
+                  </div>
+
+                  <div className="border-t border-[#F0EDF5] mt-1 pt-1 p-1">
+                    <button
+                      onClick={() => onNavigate('auth')}
+                      className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs text-slate-600 hover:bg-[#F7F5FA]"
+                    >
+                      <User size={13} />
+                      <span>Account Settings</span>
+                    </button>
                   </div>
                 </div>
               )}
             </div>
-          </div>
 
-          {/* Mobile Menu Hamburger Button */}
-          <div className="flex md:hidden items-center gap-2">
-            <button
-              onClick={() => handleNavClick('report')}
-              className="p-2 rounded-xl bg-electric-500 text-midnight-950 font-bold text-xs"
-              title="Report an Issue"
-            >
-              <PlusCircle size={18} />
-            </button>
-
+            {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-midnight-900 border border-midnight-800 text-slate-300 hover:text-white"
+              className="md:hidden p-2 rounded-xl text-slate-700 hover:bg-[#F5F3F8]"
+              aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -261,77 +247,66 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-midnight-800 bg-midnight-950 px-4 pt-3 pb-6 space-y-2">
+        <div className="md:hidden border-t border-[#E7E3EC] bg-white px-4 pt-3 pb-5 space-y-2 shadow-lg">
           <button
             onClick={() => handleNavClick('landing')}
-            className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:bg-midnight-900"
+            className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold ${
+              currentTab === 'landing' ? 'bg-[#EDE5F0] text-[#552B58]' : 'text-slate-700'
+            }`}
           >
-            Home
+            Overview
           </button>
           <button
             onClick={() => handleNavClick('explorer')}
-            className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:bg-midnight-900 flex items-center gap-2"
+            className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+              currentTab === 'explorer' ? 'bg-[#EDE5F0] text-[#552B58]' : 'text-slate-700'
+            }`}
           >
-            <Map size={16} className="text-electric-500" />
-            <span>Explore Reported Issues</span>
+            <Map size={14} />
+            <span>Issues Map</span>
           </button>
           <button
             onClick={() => handleNavClick('citizen-dashboard')}
-            className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:bg-midnight-900 flex items-center gap-2"
+            className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold ${
+              currentTab === 'citizen-dashboard' ? 'bg-[#EDE5F0] text-[#552B58]' : 'text-slate-700'
+            }`}
           >
-            <User size={16} className="text-electric-500" />
-            <span>My Citizen Dashboard</span>
+            My Reports
           </button>
           <button
             onClick={() => handleNavClick('analytics')}
-            className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:bg-midnight-900 flex items-center gap-2"
+            className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+              currentTab === 'analytics' ? 'bg-[#EDE5F0] text-[#552B58]' : 'text-slate-700'
+            }`}
           >
-            <BarChart3 size={16} className="text-electric-500" />
+            <BarChart2 size={14} />
             <span>Civic Analytics</span>
           </button>
+          {isAdmin && (
+            <button
+              onClick={() => handleNavClick('admin')}
+              className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-[#B55D1C] bg-[#FDF0E6]"
+            >
+              Admin Dispatch Console
+            </button>
+          )}
           <button
-            onClick={() => handleNavClick('admin')}
-            className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-amber-300 hover:bg-midnight-900 flex items-center gap-2"
+            onClick={() => handleNavClick('queries')}
+            className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+              currentTab === 'queries' ? 'bg-[#EDE5F0] text-[#552B58]' : 'text-slate-700'
+            }`}
           >
-            <ShieldCheck size={16} className="text-amber-400" />
-            <span>Administrator Console</span>
+            <HelpCircle size={14} />
+            <span>Queries & Inquiries</span>
           </button>
           <button
             onClick={() => handleNavClick('about')}
-            className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:bg-midnight-900"
+            className="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold text-slate-700"
           >
-            How CivicLens Works
+            About & Disclaimers
           </button>
-
-          <div className="pt-3 border-t border-midnight-800 space-y-2">
-            <div className="text-xs text-slate-400 font-semibold">Demo Role Switch:</div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => {
-                  signInAsDemoUser('citizen');
-                  setMobileMenuOpen(false);
-                }}
-                className={`flex-1 py-1.5 rounded-lg text-xs font-semibold ${
-                  role === 'citizen' ? 'bg-electric-500 text-midnight-950' : 'bg-midnight-800 text-slate-300'
-                }`}
-              >
-                Citizen Role
-              </button>
-              <button
-                onClick={() => {
-                  signInAsDemoUser('admin');
-                  setMobileMenuOpen(false);
-                }}
-                className={`flex-1 py-1.5 rounded-lg text-xs font-semibold ${
-                  role === 'admin' ? 'bg-amber-400 text-midnight-950' : 'bg-midnight-800 text-slate-300'
-                }`}
-              >
-                Admin Role
-              </button>
-            </div>
-          </div>
         </div>
       )}
     </header>

@@ -114,3 +114,4 @@ export async function reverseGeocode(lat: number, lng: number): Promise<string> 
   }
   return `Coordinates: ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 }
+

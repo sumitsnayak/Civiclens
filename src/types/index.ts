@@ -97,3 +97,18 @@ export interface ReportFilterOptions {
   status?: ReportStatus | 'all';
   sortBy?: 'newest' | 'oldest' | 'highest_priority' | 'most_upvoted';
 }
+
+export interface CitizenQuery {
+  id: string;
+  ticket_reference?: string;
+  author_name: string;
+  category: ReportCategory | 'general';
+  question: string;
+  details?: string;
+  status: 'answered' | 'pending' | 'escalated';
+  response?: string;
+  responder_name?: string;
+  created_at: string;
+  upvotes: number;
+}
+

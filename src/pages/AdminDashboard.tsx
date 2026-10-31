@@ -7,22 +7,19 @@ import { SeverityBadge } from '../components/common/SeverityBadge';
 import { CategoryBadge } from '../components/common/CategoryBadge';
 import { StatusChangeModal } from '../components/admin/StatusChangeModal';
 import { DuplicateLinkModal } from '../components/admin/DuplicateLinkModal';
-import { formatDate, timeAgo } from '../lib/utils';
+import { timeAgo } from '../lib/utils';
 import { 
-  ShieldCheck, 
   Download, 
   Search, 
-  Filter, 
-  RefreshCw, 
-  Edit3, 
+  Edit2, 
   Copy, 
-  ExternalLink, 
-  AlertTriangle, 
-  FileSpreadsheet,
+  ExternalLink,
+  ShieldAlert,
+  RotateCcw,
   CheckCircle2,
   Clock,
   Wrench,
-  AlertCircle
+  AlertTriangle
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -37,7 +34,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectReport }
   const [statusFilter, setStatusFilter] = useState<ReportStatus | 'all'>('all');
   const [severityFilter, setSeverityFilter] = useState<ReportSeverity | 'all'>('all');
 
-  // Modals state
   const [editingReport, setEditingReport] = useState<Report | null>(null);
   const [duplicateReport, setDuplicateReport] = useState<Report | null>(null);
 
@@ -69,7 +65,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectReport }
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `civiclens_reports_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `civiclens_export_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -101,66 +97,56 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectReport }
     setReports((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
   };
 
-  // If user is not admin, show secure lock screen
   if (!isAdmin) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-20 text-center space-y-6 animate-in fade-in">
-        <div className="w-16 h-16 rounded-3xl bg-amber-500/10 text-amber-500 border border-amber-500/20 mx-auto flex items-center justify-center">
-          <ShieldCheck size={32} />
+      <div className="max-w-md mx-auto px-4 py-16 text-center space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-[#FDF0E6] text-[#B55D1C] border border-[#F6D5BD] mx-auto flex items-center justify-center font-bold shadow-2xs">
+          <ShieldAlert size={22} />
         </div>
-        <div className="space-y-2">
-          <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-            Administrator Access Required
-          </h2>
-          <p className="text-xs text-slate-500 max-w-md mx-auto">
-            This management console requires verified municipal staff permissions with Row Level Security checks.
-          </p>
-        </div>
-
-        <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-xs text-amber-800 dark:text-amber-300 max-w-md mx-auto space-y-3">
-          <p>
-            <strong>Hackathon Evaluator Notice:</strong> You can test the full administrator dispatch workflow using the one-click demo role switcher below.
-          </p>
-          <button
-            onClick={() => signInAsDemoUser('admin')}
-            className="w-full py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-midnight-950 font-bold text-xs shadow-md transition-all"
-          >
-            Switch to Administrator Profile (Director Sharma)
-          </button>
-        </div>
+        <h2 className="text-base font-bold text-slate-900">
+          Administrator Credentials Required
+        </h2>
+        <p className="text-xs text-slate-500">
+          The operations console is role-restricted to authorized city administrators and dispatch coordinators.
+        </p>
+        <button
+          onClick={() => signInAsDemoUser('admin')}
+          className="px-5 py-2.5 rounded-xl bg-[#442646] hover:bg-[#341B36] text-white font-bold text-xs shadow-xs transition-all"
+        >
+          Switch to Admin Demo (Director Sharma)
+        </button>
       </div>
     );
   }
 
   const reportedCount = reports.filter((r) => r.status === 'reported').length;
-  const underReviewCount = reports.filter((r) => r.status === 'under_review').length;
-  const inProgressCount = reports.filter((r) => r.status === 'in_progress').length;
+  const inProgressCount = reports.filter((r) => r.status === 'in_progress' || r.status === 'under_review').length;
   const resolvedCount = reports.filter((r) => r.status === 'resolved').length;
-  const criticalCount = reports.filter((r) => r.severity === 'critical' && r.status !== 'resolved').length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
-      {/* Admin Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E7E2ED] pb-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 text-amber-500 text-xs font-bold border border-amber-500/20 mb-2">
-            <ShieldCheck size={14} />
-            <span>Civic Operations Command</span>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              Municipal Operations & Triage
+            </h1>
+            <span className="px-2 py-0.5 rounded-full bg-[#FDF0E6] text-[#B55D1C] text-[10px] font-bold border border-[#F6D5BD]">
+              Admin Active
+            </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            Administrator Triage & Dispatch Console
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Dispatch field crews, update public timelines, annotate internal technical logs, and export records
+          <p className="text-xs text-slate-500 mt-0.5">
+            Operator: <strong className="text-slate-800">{user?.display_name}</strong> (Department Director)
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={handleExportCsv}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200 text-xs font-bold transition-all border border-slate-200 dark:border-slate-700"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#E7E2ED] bg-white hover:bg-[#F5F3F8] text-slate-700 text-xs font-bold shadow-2xs transition-colors"
           >
-            <Download size={15} />
+            <Download size={13} />
             <span>Export CSV</span>
           </button>
 
@@ -169,213 +155,174 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectReport }
               ReportService.resetToDemoData();
               loadAllReports();
             }}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 text-xs font-semibold"
-            title="Reset to fresh demo dataset"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#E7E2ED] bg-white hover:bg-[#F5F3F8] text-slate-500 text-xs font-medium"
+            title="Reset demo dataset"
           >
-            <RefreshCw size={14} />
+            <RotateCcw size={12} />
             <span>Reset Demo</span>
           </button>
         </div>
       </div>
 
-      {/* KPI Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
-          <div className="text-xs text-slate-500 font-medium">Total Registered</div>
-          <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">{reports.length}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Full civic registry</div>
+      {/* Metrics Row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-4 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-[11px] font-semibold text-slate-500 uppercase">Total Tickets</div>
+          <div className="text-2xl font-black text-slate-900 mt-0.5">{reports.length}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">Across all wards</div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
-          <div className="text-xs text-blue-600 font-medium flex items-center gap-1">
-            <Clock size={13} />
-            <span>New / Pending</span>
-          </div>
-          <div className="text-2xl font-black text-blue-600 mt-1">{reportedCount}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Awaiting dispatch</div>
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-4 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-[11px] font-bold text-[#B55D1C] uppercase">Pending Triage</div>
+          <div className="text-2xl font-black text-[#B55D1C] mt-0.5">{reportedCount}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">Awaiting assignment</div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
-          <div className="text-xs text-purple-600 font-medium flex items-center gap-1">
-            <Wrench size={13} />
-            <span>Active Remediation</span>
-          </div>
-          <div className="text-2xl font-black text-purple-600 mt-1">{inProgressCount + underReviewCount}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Crews deployed</div>
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-4 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-[11px] font-bold text-[#552B58] uppercase">In Remediation</div>
+          <div className="text-2xl font-black text-[#552B58] mt-0.5">{inProgressCount}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">Active field teams</div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
-          <div className="text-xs text-emerald-600 font-medium flex items-center gap-1">
-            <CheckCircle2 size={13} />
-            <span>Resolved</span>
-          </div>
-          <div className="text-2xl font-black text-emerald-600 mt-1">{resolvedCount}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Closed successfully</div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
-          <div className="text-xs text-rose-600 font-medium flex items-center gap-1">
-            <AlertTriangle size={13} />
-            <span>Critical Hazards</span>
-          </div>
-          <div className="text-2xl font-black text-rose-600 mt-1">{criticalCount}</div>
-          <div className="text-[10px] text-slate-400 mt-1">High public risk</div>
+        <div className="bg-white border border-[#E7E2ED] rounded-2xl p-4 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)]">
+          <div className="text-[11px] font-bold text-[#247A48] uppercase">Resolved</div>
+          <div className="text-2xl font-black text-[#247A48] mt-0.5">{resolvedCount}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">Verified completion</div>
         </div>
       </div>
 
-      {/* Main Admin Management Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-        {/* Filters Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      {/* Table & Filters */}
+      <div className="bg-white border border-[#E7E2ED] rounded-3xl p-5 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)] space-y-4">
+        {/* Filters */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
           <div className="relative">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search code, title, address..."
-              className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-electric-500"
+              placeholder="Search reference, title, location..."
+              className="w-full pl-8 pr-3 py-2 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs text-slate-900 placeholder-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white"
             />
-            <Search size={14} className="absolute left-3 top-2.5 text-slate-400" />
+            <Search size={13} className="absolute left-2.5 top-2.5 text-slate-400" />
           </div>
 
-          <div>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-electric-500"
-            >
-              <option value="all">All Statuses</option>
-              <option value="reported">Reported</option>
-              <option value="under_review">Under Review</option>
-              <option value="in_progress">In Progress</option>
-              <option value="resolved">Resolved</option>
-              <option value="rejected">Rejected / Duplicate</option>
-            </select>
-          </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as any)}
+            className="px-3 py-2 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white"
+          >
+            <option value="all">All Statuses</option>
+            <option value="reported">Reported</option>
+            <option value="under_review">Under Review</option>
+            <option value="in_progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+            <option value="rejected">Rejected</option>
+          </select>
 
-          <div>
-            <select
-              value={severityFilter}
-              onChange={(e) => setSeverityFilter(e.target.value as any)}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-electric-500"
-            >
-              <option value="all">All Severities</option>
-              <option value="critical">Critical</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
-          </div>
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value as any)}
+            className="px-3 py-2 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white"
+          >
+            <option value="all">All Categories</option>
+            <option value="pothole">Road Pothole</option>
+            <option value="garbage">Garbage / Waste</option>
+            <option value="streetlight">Streetlight</option>
+            <option value="water_leakage">Water Leakage</option>
+            <option value="drainage">Drainage</option>
+            <option value="infrastructure">Infrastructure</option>
+            <option value="other">Other</option>
+          </select>
 
-          <div>
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value as any)}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-semibold focus:ring-2 focus:ring-electric-500"
-            >
-              <option value="all">All Categories</option>
-              <option value="pothole">Roads & Potholes</option>
-              <option value="garbage">Garbage & Dumping</option>
-              <option value="water_leakage">Water Leakage</option>
-              <option value="streetlight">Broken Streetlights</option>
-              <option value="drainage">Drainage & Flooding</option>
-              <option value="infrastructure">Infrastructure</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
+          <select
+            value={severityFilter}
+            onChange={(e) => setSeverityFilter(e.target.value as any)}
+            className="px-3 py-2 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white"
+          >
+            <option value="all">All Severities</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
         </div>
 
-        {/* Data Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                <th className="py-3 px-3">Ticket</th>
-                <th className="py-3 px-3">Category</th>
-                <th className="py-3 px-3">Severity</th>
-                <th className="py-3 px-3">Current Status</th>
-                <th className="py-3 px-3">Agreements</th>
-                <th className="py-3 px-3">Reported</th>
-                <th className="py-3 px-3 text-right">Actions</th>
+        {/* Table */}
+        <div className="overflow-x-auto rounded-2xl border border-[#E7E2ED]">
+          <table className="w-full text-left text-xs text-slate-800">
+            <thead className="bg-[#FAF9FC] border-b border-[#E7E2ED] text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              <tr>
+                <th className="py-3 px-3.5">Ticket</th>
+                <th className="py-3 px-3.5">Issue & Location</th>
+                <th className="py-3 px-3.5">Category</th>
+                <th className="py-3 px-3.5">Severity</th>
+                <th className="py-3 px-3.5">Status</th>
+                <th className="py-3 px-3.5">Priority</th>
+                <th className="py-3 px-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
+            <tbody className="divide-y divide-[#F2EEF6] bg-white">
               {filteredReports.map((report) => (
-                <tr
-                  key={report.id}
-                  className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
-                >
-                  {/* Reference & Title */}
-                  <td className="py-3 px-3">
-                    <div className="flex items-center gap-2.5">
-                      <img
-                        src={report.image_path}
-                        alt="thumb"
-                        className="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0"
-                      />
-                      <div className="truncate max-w-xs">
-                        <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
-                          {report.reference_code}
-                        </span>
-                        <div className="text-slate-600 dark:text-slate-400 font-medium truncate">
-                          {report.title}
-                        </div>
-                      </div>
+                <tr key={report.id} className="hover:bg-[#FAF9FC] transition-colors">
+                  <td className="py-3 px-3.5 font-mono text-[11px] font-bold text-slate-900 whitespace-nowrap">
+                    {report.reference_code}
+                    {report.duplicate_of && (
+                      <span className="block text-[10px] text-slate-400 font-sans font-normal">
+                        ↳ Linked to parent
+                      </span>
+                    )}
+                  </td>
+
+                  <td className="py-3 px-3.5 max-w-xs">
+                    <div className="font-bold text-slate-900 truncate">
+                      {report.title}
+                    </div>
+                    <div className="text-[11px] text-slate-400 truncate">
+                      {report.address || 'Coordinates provided'}
                     </div>
                   </td>
 
-                  {/* Category */}
-                  <td className="py-3 px-3">
+                  <td className="py-3 px-3.5 whitespace-nowrap">
                     <CategoryBadge category={report.category} size="sm" />
                   </td>
 
-                  {/* Severity */}
-                  <td className="py-3 px-3">
+                  <td className="py-3 px-3.5 whitespace-nowrap">
                     <SeverityBadge severity={report.severity} size="sm" />
                   </td>
 
-                  {/* Status */}
-                  <td className="py-3 px-3">
+                  <td className="py-3 px-3.5 whitespace-nowrap">
                     <StatusBadge status={report.status} size="sm" />
                   </td>
 
-                  {/* Upvotes */}
-                  <td className="py-3 px-3">
-                    <span className="font-bold text-slate-700 dark:text-slate-300">
-                      {report.upvotes_count}
-                    </span>
+                  <td className="py-3 px-3.5 whitespace-nowrap font-mono text-[11px] font-bold text-slate-700">
+                    {report.priority_score} pts
                   </td>
 
-                  {/* Reported Time */}
-                  <td className="py-3 px-3 text-slate-400 text-[11px]">
-                    {timeAgo(report.created_at)}
-                  </td>
-
-                  {/* Action Buttons */}
-                  <td className="py-3 px-3 text-right">
+                  <td className="py-3 px-3.5 text-right whitespace-nowrap">
                     <div className="flex items-center justify-end gap-1.5">
                       <button
                         onClick={() => setEditingReport(report)}
-                        className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-electric-500 hover:text-midnight-950 text-slate-600 dark:text-slate-300 transition-colors"
-                        title="Update Ticket Status"
+                        className="px-2.5 py-1 rounded-lg bg-[#EDE5F0] hover:bg-[#E5DAE9] text-[#552B58] text-[11px] font-bold transition-colors flex items-center gap-1"
+                        title="Triage & Update Status"
                       >
-                        <Edit3 size={14} />
+                        <Edit2 size={11} />
+                        <span>Triage</span>
                       </button>
 
                       <button
                         onClick={() => setDuplicateReport(report)}
-                        className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 transition-colors"
+                        className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-[#F2EFF6] transition-colors"
                         title="Link as Duplicate"
                       >
-                        <Copy size={14} />
+                        <Copy size={13} />
                       </button>
 
                       <button
                         onClick={() => onSelectReport(report)}
-                        className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-midnight-950 hover:text-white text-slate-600 dark:text-slate-300 transition-colors"
-                        title="Inspect Public View"
+                        className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-[#F2EFF6] transition-colors"
+                        title="View Public Details"
                       >
-                        <ExternalLink size={14} />
+                        <ExternalLink size={13} />
                       </button>
                     </div>
                   </td>
@@ -383,12 +330,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectReport }
               ))}
             </tbody>
           </table>
-
-          {filteredReports.length === 0 && (
-            <div className="py-12 text-center text-xs text-slate-400">
-              No matching tickets found.
-            </div>
-          )}
         </div>
       </div>
 

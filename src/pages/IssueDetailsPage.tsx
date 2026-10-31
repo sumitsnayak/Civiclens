@@ -14,16 +14,13 @@ import {
   MapPin, 
   ThumbsUp, 
   Share2, 
-  Sparkles, 
-  CheckCircle2, 
   Clock, 
-  ShieldCheck, 
+  Shield, 
   Maximize2, 
   X, 
-  Copy, 
-  Layers, 
+  Lock,
   MessageSquare,
-  Lock
+  CheckCircle2
 } from 'lucide-react';
 import L from 'leaflet';
 
@@ -49,14 +46,12 @@ export const IssueDetailsPage: React.FC<IssueDetailsPageProps> = ({
   const [allReports, setAllReports] = useState<Report[]>([]);
 
   useEffect(() => {
-    // Refresh report from store to get latest updates
     ReportService.getReportById(initialReport.id).then((fresh) => {
       if (fresh) setReport(fresh);
     });
     ReportService.getReports().then(setAllReports);
   }, [initialReport.id]);
 
-  // Leaflet Mini Map Setup
   useEffect(() => {
     const container = document.getElementById('details-mini-map');
     if (!container) return;
@@ -73,19 +68,14 @@ export const IssueDetailsPage: React.FC<IssueDetailsPageProps> = ({
     }).addTo(map);
 
     const pinHtml = `
-      <div class="relative" style="transform: translate(-50%, -100%);">
-        <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-lg bg-midnight-950 border-2 border-electric-500">
-          <div class="w-2.5 h-2.5 rounded-full bg-electric-400"></div>
-        </div>
-        <div class="w-2 h-2 rotate-45 mx-auto -mt-1 bg-midnight-950 border-r border-b border-electric-500"></div>
-      </div>
+      <div style="width: 22px; height: 22px; border-radius: 50%; background-color: #442646; border: 2px solid white; box-shadow: 0 4px 8px rgba(44,25,48,0.3);"></div>
     `;
 
     const icon = L.divIcon({
       className: 'details-marker',
       html: pinHtml,
-      iconSize: [32, 40],
-      iconAnchor: [16, 40],
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
     });
 
     L.marker([report.latitude, report.longitude], { icon }).addTo(map);
@@ -144,33 +134,29 @@ export const IssueDetailsPage: React.FC<IssueDetailsPageProps> = ({
   const currentStepIndex = STATUS_CONFIG[report.status]?.stepIndex || 1;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-200">
-      {/* Top Navigation & Action Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      {/* Top Nav & Admin controls */}
+      <div className="flex items-center justify-between">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors w-fit"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900"
         >
           <ArrowLeft size={14} />
-          <span>Back to Explorer</span>
+          <span>Back to Issues</span>
         </button>
 
-        {/* Admin Bar if role = admin */}
         {isAdmin && (
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono text-amber-500 font-bold bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20">
-              Admin Mode Active
-            </span>
             <button
               onClick={() => setIsStatusModalOpen(true)}
-              className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-midnight-950 font-bold text-xs shadow-sm transition-all flex items-center gap-1.5"
+              className="px-3.5 py-1.5 rounded-xl bg-[#FDF0E6] border border-[#F6D5BD] text-[#B55D1C] hover:bg-[#FCE5D4] font-bold text-xs shadow-2xs transition-colors flex items-center gap-1.5"
             >
-              <ShieldCheck size={14} />
-              <span>Update Ticket Status</span>
+              <Shield size={12} />
+              <span>Update Status</span>
             </button>
             <button
               onClick={() => setIsDuplicateModalOpen(true)}
-              className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs hover:bg-slate-200"
+              className="px-3 py-1.5 rounded-xl border border-[#E7E2ED] bg-white hover:bg-[#F5F3F8] text-slate-700 font-bold text-xs shadow-2xs"
             >
               Link Duplicate
             </button>
@@ -178,55 +164,54 @@ export const IssueDetailsPage: React.FC<IssueDetailsPageProps> = ({
         )}
       </div>
 
-      {/* Main Ticket Header Card */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-        {/* Code & Badges */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+      {/* Main Ticket Card (Dribbble Style) */}
+      <div className="bg-white border border-[#E7E2ED] rounded-3xl p-6 sm:p-8 space-y-5 shadow-[0_4px_24px_-2px_rgba(44,25,48,0.03)]">
+        {/* Header Badges */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#F0EDF5]">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-xl bg-midnight-950 text-white font-mono font-bold text-xs tracking-wider border border-white/10">
+            <span className="font-mono text-xs font-bold text-slate-800 bg-[#F5F4F8] px-2.5 py-0.5 rounded-lg border border-[#EAE6F0]">
               {report.reference_code}
             </span>
-            <CategoryBadge category={report.category} size="md" />
-            <SeverityBadge severity={report.severity} size="md" />
+            <CategoryBadge category={report.category} size="sm" />
+            <SeverityBadge severity={report.severity} size="sm" />
           </div>
 
           <div className="flex items-center gap-2">
-            <StatusBadge status={report.status} size="md" />
+            <StatusBadge status={report.status} size="sm" />
             <button
               onClick={handleShare}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"
-              title="Share report link"
+              className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-[#F2EFF6] transition-colors"
+              title="Copy share link"
             >
-              <Share2 size={15} />
+              <Share2 size={13} />
             </button>
-            {copied && <span className="text-xs text-electric-600 font-bold">Link copied!</span>}
+            {copied && <span className="text-[11px] text-emerald-600 font-bold">Link copied</span>}
           </div>
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white leading-tight">
+        <h1 className="text-xl sm:text-2xl font-black text-slate-900 leading-snug">
           {report.title}
         </h1>
 
-        {/* Metadata info line */}
-        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
           <span className="flex items-center gap-1">
-            <Clock size={14} className="text-slate-400" />
-            <span>Submitted {formatDate(report.created_at)} ({timeAgo(report.created_at)})</span>
+            <Clock size={12} />
+            <span>Submitted {formatDate(report.created_at)}</span>
           </span>
           <span className="flex items-center gap-1">
-            <MapPin size={14} className="text-electric-500" />
-            <span>{report.address || 'Street address confirmed'}</span>
+            <MapPin size={12} />
+            <span>{report.address}</span>
           </span>
           {report.landmark && (
-            <span className="italic">Landmark: {report.landmark}</span>
+            <span className="text-slate-400 italic">Landmark: {report.landmark}</span>
           )}
         </div>
 
-        {/* STATUS PROGRESS TIMELINE PIPELINE */}
-        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Resolution Pipeline Workflow
+        {/* Progress Pipeline */}
+        <div className="pt-4 border-t border-[#F0EDF5] space-y-2">
+          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            Resolution Pipeline
           </div>
           <div className="grid grid-cols-4 gap-2">
             {statusWorkflow.map((st, idx) => {
@@ -236,31 +221,18 @@ export const IssueDetailsPage: React.FC<IssueDetailsPageProps> = ({
               const conf = STATUS_CONFIG[st];
 
               return (
-                <div key={st} className="space-y-2">
+                <div key={st} className="space-y-1.5">
                   <div
-                    className={`h-2 rounded-full transition-all duration-300 ${
+                    className={`h-2 rounded-full transition-colors ${
                       isPast
                         ? 'bg-emerald-500'
                         : isCurrent
-                        ? 'bg-electric-500 shadow-glow-teal'
-                        : 'bg-slate-200 dark:bg-slate-800'
+                        ? 'bg-[#552B58]'
+                        : 'bg-[#EDE8F2]'
                     }`}
                   />
-                  <div className="text-center sm:text-left">
-                    <div
-                      className={`text-xs font-bold ${
-                        isCurrent
-                          ? 'text-slate-900 dark:text-white'
-                          : isPast
-                          ? 'text-emerald-600'
-                          : 'text-slate-400'
-                      }`}
-                    >
-                      {conf.label}
-                    </div>
-                    <div className="text-[10px] text-slate-400 hidden sm:block">
-                      {isCurrent ? 'Current stage' : isPast ? 'Completed' : 'Pending'}
-                    </div>
+                  <div className={`text-[11px] font-bold ${isCurrent ? 'text-[#552B58]' : isPast ? 'text-emerald-700' : 'text-slate-400'}`}>
+                    {conf.label}
                   </div>
                 </div>
               );
@@ -269,171 +241,141 @@ export const IssueDetailsPage: React.FC<IssueDetailsPageProps> = ({
         </div>
       </div>
 
-      {/* Two Column Layout: Left Details & Photo, Right Map & Updates */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column (7 cols): Photo & Description */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Photograph Container */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm">
-            <div className="relative group">
+      {/* Two Column Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        {/* Left: Photo & Description */}
+        <div className="md:col-span-7 space-y-5">
+          <div className="bg-white border border-[#E7E2ED] rounded-3xl overflow-hidden shadow-2xs">
+            <div className="relative group aspect-video bg-slate-100">
               <img
                 src={report.image_path}
                 alt={report.title}
-                className="w-full aspect-video object-cover cursor-zoom-in"
+                className="w-full h-full object-cover cursor-zoom-in"
                 onClick={() => setIsPhotoZoomed(true)}
               />
               <button
                 onClick={() => setIsPhotoZoomed(true)}
-                className="absolute bottom-3 right-3 p-2 rounded-xl bg-midnight-950/80 text-white backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 text-xs font-semibold"
+                className="absolute bottom-2.5 right-2.5 p-1.5 rounded-lg bg-black/70 text-white text-[11px] font-bold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
               >
-                <Maximize2 size={13} />
-                <span>Zoom Photo</span>
-              </button>
-            </div>
-
-            <div className="p-4 bg-slate-50 dark:bg-slate-950/80 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
-              <span>Photo submitted by citizen reporter</span>
-              <button
-                onClick={() => setIsPhotoZoomed(true)}
-                className="text-electric-600 font-semibold hover:underline"
-              >
-                View full resolution
+                <Maximize2 size={11} />
+                <span>Full photo</span>
               </button>
             </div>
           </div>
 
-          {/* Description Section */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              Problem Description & Citizen Report
-            </h3>
-            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+          <div className="bg-white border border-[#E7E2ED] rounded-3xl p-6 shadow-2xs space-y-3">
+            <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+              Issue Observations
+            </h2>
+            <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-wrap">
               {report.description}
             </p>
 
-            {/* AI Engineering Breakdown */}
             {report.ai_explanation && (
-              <div className="mt-4 p-4 rounded-2xl bg-electric-500/5 border border-electric-500/20 space-y-2">
-                <div className="flex items-center gap-2 text-electric-600 dark:text-electric-400 font-bold text-xs">
-                  <Sparkles size={15} />
-                  <span>AI Computer Vision Diagnostic (Confidence: {Math.round((report.ai_confidence || 0.9) * 100)}%)</span>
-                </div>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {report.ai_explanation}
-                </p>
+              <div className="mt-3 p-3.5 rounded-2xl bg-[#F5F4F8] border border-[#EAE6F0] text-xs text-slate-600 space-y-1">
+                <span className="font-bold text-slate-800 block text-[11px]">
+                  Diagnostic Note:
+                </span>
+                <p className="leading-relaxed">{report.ai_explanation}</p>
               </div>
             )}
 
-            {/* Civic Action Upvoting / Community Agreement */}
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <div>
-                <div className="text-xs font-bold text-slate-900 dark:text-white">
-                  Can you confirm this problem?
-                </div>
-                <div className="text-[11px] text-slate-500">
-                  Civic upvotes help municipal dispatchers gauge community impact
-                </div>
-              </div>
-
+            <div className="pt-4 border-t border-[#F0EDF5] flex items-center justify-between">
+              <span className="text-xs text-slate-500 font-medium">
+                Confirm this problem to raise civic priority
+              </span>
               <button
                 onClick={handleUpvote}
-                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all shadow-sm ${
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs ${
                   hasUpvoted
-                    ? 'bg-electric-500 text-midnight-950 shadow-glow-teal'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-200'
+                    ? 'bg-[#442646] text-white shadow-xs'
+                    : 'bg-[#EDE5F0] text-[#552B58] hover:bg-[#E5DAE9]'
                 }`}
               >
-                <ThumbsUp size={15} className={hasUpvoted ? 'fill-midnight-950' : ''} />
-                <span>{upvotes} Citizens Agreed</span>
+                <ThumbsUp size={13} className={hasUpvoted ? 'fill-current' : ''} />
+                <span>{upvotes} Agreed</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Right Column (5 cols): Mini-map & Progress Updates */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Spatial Location Mini-Map */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-3">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-900 dark:text-white">
-              <span className="flex items-center gap-1.5">
-                <MapPin size={15} className="text-electric-500" />
-                <span>Verified Coordinates</span>
-              </span>
-              <span className="font-mono text-slate-400 font-normal">
+        {/* Right: Map & Timeline */}
+        <div className="md:col-span-5 space-y-5">
+          {/* Spatial Mini-Map */}
+          <div className="bg-white border border-[#E7E2ED] rounded-3xl p-4 shadow-2xs space-y-2.5">
+            <div className="text-xs font-bold text-slate-900 flex items-center justify-between">
+              <span>Location</span>
+              <span className="text-[11px] font-mono text-slate-400 font-normal">
                 {report.latitude.toFixed(4)}, {report.longitude.toFixed(4)}
               </span>
             </div>
 
             <div
               id="details-mini-map"
-              className="h-44 w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-inner"
+              className="h-36 w-full rounded-2xl overflow-hidden border border-[#EAE6F0]"
             />
 
-            <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
-              📍 {report.address || 'Street coordinates confirmed'}
+            <p className="text-xs text-slate-600 truncate font-medium">
+              {report.address}
             </p>
           </div>
 
-          {/* Progress Timeline & Updates History */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
+          {/* Activity Log */}
+          <div className="bg-white border border-[#E7E2ED] rounded-3xl p-5 shadow-2xs space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <MessageSquare size={16} className="text-electric-500" />
-                <span>Official Progress Log</span>
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <MessageSquare size={13} />
+                <span>Audit Timeline</span>
               </h3>
-              <span className="text-[11px] font-mono text-slate-400">
-                {report.updates?.length || 1} entries
+              <span className="text-[10px] text-slate-400 font-mono font-bold">
+                {report.updates?.length || 1} ENTRIES
               </span>
             </div>
 
-            <div className="space-y-4 pt-2">
+            <div className="space-y-3 pt-1">
               {report.updates && report.updates.length > 0 ? (
                 report.updates.map((upd, idx) => (
-                  <div key={upd.id || idx} className="relative pl-6 pb-4 last:pb-0 border-l-2 border-slate-200 dark:border-slate-800">
-                    <div className="w-2.5 h-2.5 rounded-full bg-electric-500 absolute -left-[6px] top-1 shadow-sm" />
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300">
-                        {upd.actor_name || 'Municipal Operations'}
-                      </span>
+                  <div key={upd.id || idx} className="text-xs space-y-1 pb-2.5 border-b border-[#F0EDF5] last:border-b-0 last:pb-0">
+                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                      <span className="font-bold text-slate-700">{upd.actor_name || 'Staff'}</span>
                       <span>{timeAgo(upd.created_at)}</span>
                     </div>
 
                     {upd.public_message && (
-                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                      <p className="text-slate-600 leading-relaxed text-xs">
                         {upd.public_message}
                       </p>
                     )}
 
-                    {/* Internal admin note if role is admin */}
                     {isAdmin && upd.internal_note && (
-                      <div className="mt-2 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-amber-600 dark:text-amber-400 flex items-start gap-1.5">
-                        <Lock size={12} className="shrink-0 mt-0.5" />
-                        <span><strong>Internal Note:</strong> {upd.internal_note}</span>
+                      <div className="p-2 rounded-xl bg-[#FDF0E6] border border-[#F6D5BD] text-[11px] text-[#8C4311] flex items-start gap-1">
+                        <Lock size={10} className="shrink-0 mt-0.5 text-[#B55D1C]" />
+                        <span><strong>Internal:</strong> {upd.internal_note}</span>
                       </div>
                     )}
                   </div>
                 ))
               ) : (
-                <div className="text-xs text-slate-400 italic">
-                  Report logged in system. Awaiting preliminary inspector triage.
-                </div>
+                <p className="text-xs text-slate-400">
+                  Ticket received. Awaiting dispatcher review.
+                </p>
               )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Photo Zoom Modal */}
+      {/* Photo Modal */}
       {isPhotoZoomed && (
         <div
           onClick={() => setIsPhotoZoomed(false)}
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in"
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 cursor-zoom-out"
         >
           <button
             onClick={() => setIsPhotoZoomed(false)}
-            className="absolute top-4 right-4 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white"
+            className="absolute top-4 right-4 p-2 rounded-full bg-white/20 text-white"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
           <img
             src={report.image_path}
