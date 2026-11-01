@@ -250,6 +250,9 @@ export const IssueDetailsPage: React.FC<IssueDetailsPageProps> = ({
               <img
                 src={report.image_path}
                 alt={report.title}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/images/issues/pothole.jpg';
+                }}
                 className="w-full h-full object-cover cursor-zoom-in"
                 onClick={() => setIsPhotoZoomed(true)}
               />

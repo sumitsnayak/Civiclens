@@ -98,7 +98,7 @@ export const CivicMap: React.FC<CivicMapProps> = ({
       // Popup content
       const popupHtml = `
         <div style="font-family: Inter, sans-serif; width: 230px; border-radius: 12px; overflow: hidden; padding: 2px;">
-          <img src="${report.image_path}" style="width: 100%; height: 110px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;" alt="${report.title}" />
+          <img src="${report.image_path}" onerror="this.src='/images/issues/pothole.jpg'" style="width: 100%; height: 110px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;" alt="${report.title}" />
           <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: ${pinColor}; margin-bottom: 2px;">
             ${statusConf.label} • ${catConf.label}
           </div>

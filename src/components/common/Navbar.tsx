@@ -132,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
             {/* Primary Action Button (Dribbble Signature Plum) */}
             <button
               onClick={() => handleNavClick('report')}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#442646] hover:bg-[#361D38] text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99]"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#442646] to-[#5A2B5E] hover:from-[#361D38] hover:to-[#442646] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <Plus size={15} className="stroke-[2.5]" />
               <span className="hidden sm:inline">Report Issue</span>

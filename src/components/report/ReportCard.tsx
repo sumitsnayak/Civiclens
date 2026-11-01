@@ -57,12 +57,12 @@ export const ReportCard: React.FC<ReportCardProps> = ({
   return (
     <div
       onClick={() => onSelect && onSelect(report)}
-      className="bg-white border border-[#E7E3EC] hover:border-[#D3CADB] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)] hover:shadow-[0_12px_28px_-4px_rgba(44,25,48,0.08)] transition-all duration-200 flex flex-col cursor-pointer group"
+      className="bg-white border border-[#E7E3EC] hover:border-[#BF9EC6] rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_4px_20px_-2px_rgba(44,25,48,0.04)] hover:shadow-[0_16px_36px_-6px_rgba(44,25,48,0.12)] hover:-translate-y-0.5 transition-all duration-300 flex flex-col cursor-pointer group"
     >
       {/* 1. Author Row & Status Badge (Dribbble SilentPing Style) */}
       <div className="p-4 sm:p-5 pb-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 truncate">
-          <div className="w-9 h-9 rounded-full bg-[#EDE5F0] border border-[#DFCEE2] text-[#552B58] flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#F5EEF7] to-[#EDE5F0] border border-[#DFCEE2] text-[#552B58] flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
             {authorInitial}
           </div>
           <div className="truncate">
@@ -86,16 +86,22 @@ export const ReportCard: React.FC<ReportCardProps> = ({
             src={report.image_path}
             alt={report.title}
             loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = '/images/issues/pothole.jpg';
+            }}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
+          {/* Subtle gradient scrim for high-contrast badge legibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/35 pointer-events-none" />
+
           {/* Reference Tag */}
           <div className="absolute top-2.5 left-2.5">
-            <span className="px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-[10px] font-mono text-white font-medium tracking-wider">
+            <span className="px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md text-[10px] font-mono text-white font-semibold tracking-wider shadow-xs">
               {report.reference_code}
             </span>
           </div>
 
-          <div className="absolute bottom-2.5 right-2.5">
+          <div className="absolute bottom-2.5 right-2.5 shadow-sm">
             <SeverityBadge severity={report.severity} size="sm" />
           </div>
         </div>

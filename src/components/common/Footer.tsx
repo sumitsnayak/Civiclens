@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { APP_CONFIG } from '../../lib/constants';
 import { isSupabaseConfigured } from '../../lib/supabase';
-import { isAIApiConfigured } from '../../lib/aiVisionService';
+import { getAIApiStatus, AIStatusInfo } from '../../lib/aiVisionService';
 import { BrandLogo } from './BrandLogo';
 
 interface FooterProps {
@@ -9,6 +9,16 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const [aiStatus, setAiStatus] = useState<AIStatusInfo>({
+    provider: 'BharatCode',
+    model: 'qwen-3.8-27b',
+    configured: false,
+  });
+
+  useEffect(() => {
+    getAIApiStatus().then(setAiStatus);
+  }, []);
+
   return (
     <footer className="bg-white border-t border-[#E7E2ED] text-slate-500 text-xs py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
@@ -49,7 +59,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div className="flex items-center gap-3">
             <span>Storage: {isSupabaseConfigured ? 'Supabase Live' : 'Active Local Store'}</span>
             <span>•</span>
-            <span>Vision: {isAIApiConfigured ? 'Gemini 1.5 Live' : 'Diagnostic Classifier'}</span>
+            <span title={`Official BharatCode Model: ${aiStatus.model}`}>
+              Vision: {aiStatus.configured ? 'BharatCode Qwen-3.8 Live' : 'BharatCode Diagnostic (Offline Heuristic)'}
+            </span>
           </div>
         </div>
       </div>

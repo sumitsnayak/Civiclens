@@ -125,9 +125,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 <div className="rounded-2xl overflow-hidden border border-[#E7E2ED] bg-white shadow-2xs">
                   <div className="relative aspect-video w-full bg-slate-100">
                     <img 
-                      src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80" 
+                      src="/images/issues/pothole.jpg" 
                       alt="Damaged asphalt road" 
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = '/images/issues/pothole.jpg';
+                      }}
                     />
                     <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-lg bg-black/60 backdrop-blur-md text-[10px] font-mono text-white">
                       CVL-2026-8812

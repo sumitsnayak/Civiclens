@@ -13,7 +13,7 @@ CivicLens empowers citizens to report local municipal issues (potholes, garbage 
 
 ### 1. For Citizens
 - **Instant Photo Upload & Verification:** Drag & drop or camera capture for JPG, PNG, and WebP with client-side validation.
-- **AI-Powered Vision Diagnostic:** Powered by Google Gemini 1.5 Flash Vision (with local smart classifier fallback) detecting defect type, severity (Low, Medium, High, Critical), confidence rating, and preliminary engineering summary.
+- **AI-Powered Vision Diagnostic:** Powered by official BharatCode Model API (`qwen-3.8-27b` multimodal model, with local smart classifier fallback) detecting defect type, severity (Low, Medium, High, Critical), confidence rating, and preliminary engineering summary.
 - **Citizen Freedom of Override:** Full ability to correct or manually override AI suggestions.
 - **Interactive OpenStreetMap Pinpoint:** Draggable Leaflet marker with 1-click GPS geolocation and reverse-geocoded street address resolution.
 - **Audit-Trail Tracking:** Every report generates a unique reference code (e.g., `CVL-2026-8812`) with celebratory submission feedback.
@@ -40,7 +40,7 @@ CivicLens empowers citizens to report local municipal issues (potholes, garbage 
 | **Spatial Mapping** | Leaflet with OpenStreetMap & Nominatim Geocoding |
 | **Charts & Metrics** | Recharts (Responsive Pie, Bar, Area charts) |
 | **Database & Auth** | Supabase (PostgreSQL, Supabase Auth, Storage, RLS) |
-| **AI Vision Diagnostics** | Google Gemini 1.5 Flash Vision API + Local Heuristic Fallback |
+| **AI Vision Diagnostics** | BharatCode Model API (`qwen-3.8-27b`) + Local Heuristic Fallback |
 
 ---
 
@@ -60,7 +60,7 @@ npm install
 ```
 
 ### 3. Environment Setup (Optional)
-The application works **100% out of the box** using its built-in local persistence engine and vision classifier. To connect live Supabase and Google Gemini Vision:
+The application works **100% out of the box** using its built-in local persistence engine and vision classifier. To connect live Supabase and the official BharatCode Model API:
 
 ```bash
 # Copy example environment configuration
@@ -71,7 +71,12 @@ Edit `.env.local`:
 ```env
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
-VITE_GEMINI_API_KEY=your-gemini-api-key
+
+# BharatCode Model API (BharatCode Build League)
+# Key is securely kept server-side and never exposed to the browser
+BHARATCODE_API_KEY=your_bharatcode_api_key_here
+BHARATCODE_MODEL=qwen-3.8-27b
+BHARATCODE_BASE_URL=https://bharatcode.ai/api/model/v1
 ```
 
 ### 4. Supabase Database Setup

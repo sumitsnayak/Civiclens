@@ -62,10 +62,10 @@ export const AboutPage: React.FC = () => {
           <div className="p-4 rounded-2xl bg-[#F5F4F8] border border-[#EAE6F0] space-y-1.5">
             <div className="font-bold text-slate-900 flex items-center gap-2">
               <Sparkles size={15} className="text-[#552B58]" />
-              <span>Multi-Modal AI Vision</span>
+              <span>Multi-Modal BharatCode Model API</span>
             </div>
             <p className="text-slate-600 leading-relaxed">
-              Configurable Google Gemini 1.5 Vision API with structured JSON output, paired with a reliable heuristic offline fallback for zero-downtime testing.
+              Official BharatCode Model API (<code>qwen-3.8-27b</code>) multi-modal vision-language model with structured JSON triage output, paired with a secure server-side proxy and heuristic offline fallback for zero-downtime testing.
             </p>
           </div>
 

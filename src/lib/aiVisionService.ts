@@ -1,10 +1,47 @@
 import { AIVisionResult, ReportCategory, ReportSeverity } from '../types';
 
-export const isAIApiConfigured = Boolean(
-  import.meta.env.VITE_GEMINI_API_KEY && 
-  import.meta.env.VITE_GEMINI_API_KEY.length > 10 &&
-  import.meta.env.VITE_GEMINI_API_KEY !== 'YOUR_GEMINI_API_KEY'
-);
+export interface AIStatusInfo {
+  provider: string;
+  model: string;
+  configured: boolean;
+  baseUrl?: string;
+}
+
+let cachedStatus: AIStatusInfo | null = null;
+let statusFetchPromise: Promise<AIStatusInfo> | null = null;
+
+/**
+ * Checks server-side BharatCode Model API configuration status
+ */
+export async function getAIApiStatus(): Promise<AIStatusInfo> {
+  if (cachedStatus) return cachedStatus;
+  if (statusFetchPromise) return statusFetchPromise;
+
+  statusFetchPromise = (async () => {
+    try {
+      const res = await fetch('/api/ai/status');
+      if (res.ok) {
+        const data = await res.json();
+        cachedStatus = data;
+        return data;
+      }
+    } catch (e) {
+      console.warn('Could not reach AI status endpoint:', e);
+    }
+    return {
+      provider: 'BharatCode',
+      model: 'qwen-3.8-27b',
+      configured: false,
+    };
+  })();
+
+  return statusFetchPromise;
+}
+
+// Initial eager check
+getAIApiStatus().catch(() => {});
+
+export const isAIApiConfigured = true; // Endpoint is available via backend proxy
 
 /**
  * Converts a browser File or Blob to a base64 string
@@ -22,89 +59,71 @@ export async function fileToBase64(file: File): Promise<string> {
 }
 
 /**
- * Analyzes a civic issue image using Gemini Vision API or intelligent local fallback
+ * Analyzes a civic issue image using the official BharatCode Model API (qwen-3.8-27b)
+ * via secure server-side proxy, or falls back to the intelligent local classifier.
  */
 export async function analyzeCivicImage(
   imageFile?: File | null,
   previewUrl: string = ''
-): Promise<{ result: AIVisionResult; isLiveAI: boolean }> {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
-  if (isAIApiConfigured && apiKey && imageFile) {
+): Promise<{ result: AIVisionResult; isLiveAI: boolean; model?: string; error?: string }> {
+  // If an image file is provided, send base64 to server proxy
+  if (imageFile || previewUrl) {
     try {
-      const base64Data = await fileToBase64(imageFile);
-      const mimeType = imageFile.type || 'image/jpeg';
+      let imageBase64: string | undefined;
+      let mimeType = 'image/jpeg';
 
-      const prompt = `You are a municipal civil engineer and civic issue classification system for CivicLens.
-Analyze this civic issue photograph. Respond ONLY with a valid JSON object strictly matching this schema:
-{
-  "category": "pothole" | "garbage" | "streetlight" | "water_leakage" | "drainage" | "infrastructure" | "other",
-  "severity": "low" | "medium" | "high" | "critical",
-  "explanation": "concise 1-2 sentence engineering description of the defect and public safety hazard",
-  "confidence": 0.85,
-  "detected_elements": ["element1", "element2", "element3"],
-  "suggested_title": "Clear concise descriptive headline"
-}
-Ensure valid JSON without markdown wrapping if possible.`;
-
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  { text: prompt },
-                  {
-                    inlineData: {
-                      mimeType: mimeType,
-                      data: base64Data,
-                    },
-                  },
-                ],
-              },
-            ],
-            generationConfig: {
-              temperature: 0.2,
-              responseMimeType: 'application/json',
-            },
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+      if (imageFile) {
+        imageBase64 = await fileToBase64(imageFile);
+        mimeType = imageFile.type || 'image/jpeg';
       }
 
+      const response = await fetch('/api/ai/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          image_base64: imageBase64,
+          mime_type: mimeType,
+          image_url: !imageBase64 ? previewUrl : undefined,
+        }),
+      });
+
       const data = await response.json();
-      const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      
-      if (content) {
-        const cleaned = content.replace(/```json/g, '').replace(/```/g, '').trim();
-        const parsed = JSON.parse(cleaned);
-        
+
+      if (response.ok && data.success && data.result) {
+        const parsed = data.result;
         return {
           result: {
             category: sanitizeCategory(parsed.category),
             severity: sanitizeSeverity(parsed.severity),
-            explanation: parsed.explanation || 'Visual analysis completed.',
+            explanation: parsed.explanation || 'Visual analysis completed by BharatCode AI.',
             confidence: typeof parsed.confidence === 'number' ? parsed.confidence : 0.88,
             detected_elements: Array.isArray(parsed.detected_elements) ? parsed.detected_elements : ['civic defect'],
             suggested_title: parsed.suggested_title || 'Reported Civic Defect',
           },
           isLiveAI: true,
+          model: data.model || 'qwen-3.8-27b',
+        };
+      } else {
+        const errorMessage = data.error || `HTTP ${response.status}: ${response.statusText}`;
+        console.warn('BharatCode Model API returned non-success response, engaging fallback:', errorMessage);
+        
+        // Local fallback with simulated processing delay
+        await new Promise((res) => setTimeout(res, 800));
+        const fallback = analyzeLocally(imageFile, previewUrl);
+        return {
+          result: fallback,
+          isLiveAI: false,
+          error: errorMessage,
         };
       }
-    } catch (err) {
-      console.warn('Live Gemini vision call failed, engaging fallback classifier:', err);
+    } catch (err: any) {
+      console.warn('Network or proxy error calling BharatCode Model API, engaging fallback classifier:', err);
       // Fall through to fallback
     }
   }
 
   // Graceful local heuristic / offline analyzer for smooth hackathon testing & demos
-  await new Promise((res) => setTimeout(res, 1200)); // Simulate realistic analysis time
+  await new Promise((res) => setTimeout(res, 800));
 
   const fallbackResult = analyzeLocally(imageFile, previewUrl);
   return {
@@ -200,4 +219,3 @@ function analyzeLocally(file?: File | null, url: string = ''): AIVisionResult {
     suggested_title: 'Severe road surface pothole requiring asphalt patching',
   };
 }
-

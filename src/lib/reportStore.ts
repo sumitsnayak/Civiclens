@@ -11,13 +11,33 @@ import { INITIAL_DEMO_REPORTS } from './mockData';
 import { supabase, isSupabaseConfigured } from './supabase';
 import { generateReferenceCode, calculatePriorityScore } from './utils';
 
-const STORAGE_KEY = 'civiclens_reports_store_v1';
+const STORAGE_KEY = 'civiclens_reports_store_v2';
 
 function loadLocalReports(): Report[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('civiclens_reports_store_v1');
     if (raw) {
-      return JSON.parse(raw);
+      const reports: Report[] = JSON.parse(raw);
+      // Migrate legacy placeholder images to authentic real problem photos
+      const migrated = reports.map((r) => {
+        let img = r.image_path;
+        if (!img || img.includes('photo-1544717305-2782549b5136') || (r.category === 'water_leakage' && img.includes('unsplash'))) {
+          img = '/images/issues/water_leakage.jpg';
+        } else if (img.includes('photo-1509114397022-ed747cca3f65') || (r.category === 'streetlight' && img.includes('unsplash'))) {
+          img = '/images/issues/streetlight.jpg';
+        } else if (img.includes('photo-1515162816999-a0c47dc192f7') || (r.category === 'pothole' && img.includes('unsplash'))) {
+          img = '/images/issues/pothole.jpg';
+        } else if (r.category === 'garbage' && img.includes('unsplash')) {
+          img = '/images/issues/garbage.jpg';
+        } else if (r.category === 'drainage' && img.includes('unsplash')) {
+          img = '/images/issues/drainage.jpg';
+        } else if (r.category === 'infrastructure' && img.includes('unsplash')) {
+          img = '/images/issues/infrastructure.jpg';
+        }
+        return { ...r, image_path: img };
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+      return migrated;
     }
   } catch (e) {
     console.warn('Failed to load local reports:', e);

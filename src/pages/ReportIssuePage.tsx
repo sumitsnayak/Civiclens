@@ -28,7 +28,7 @@ interface ReportIssuePageProps {
   onCancel: () => void;
 }
 
-// 4 High-Res Sample Presets for Instant 1-Click Testing (Evaluator friendly)
+// High-Res Sample Presets for Instant 1-Click Testing (Evaluator friendly)
 const SAMPLE_PRESETS = [
   {
     label: 'Road Pothole',
@@ -36,7 +36,7 @@ const SAMPLE_PRESETS = [
     severity: 'critical' as ReportSeverity,
     title: 'Severe road cavity damaging vehicular traffic',
     description: 'Deep asphalt depression with exposed aggregates near the pedestrian crossing. Causing vehicles to swerve unpredictably.',
-    url: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80',
+    url: '/images/issues/pothole.jpg',
     tags: ['#roadhazard', '#pothole', '#urgentfix'],
   },
   {
@@ -45,7 +45,7 @@ const SAMPLE_PRESETS = [
     severity: 'high' as ReportSeverity,
     title: 'Uncollected refuse pile overflowing onto sidewalk',
     description: 'Municipal trash bin overflowed with decomposing municipal solid waste and discarded plastics. Blocking pedestrian right of way.',
-    url: 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=800&q=80',
+    url: '/images/issues/garbage.jpg',
     tags: ['#sanitation', '#garbagedump', '#cleancity'],
   },
   {
@@ -54,7 +54,7 @@ const SAMPLE_PRESETS = [
     severity: 'medium' as ReportSeverity,
     title: 'Non-functioning street luminaire causing dark zone',
     description: 'Overhead municipal luminaire non-operational for three consecutive nights. Entire crosswalk corridor left unilluminated.',
-    url: 'https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=800&q=80',
+    url: '/images/issues/streetlight.jpg',
     tags: ['#streetlight', '#darkstreet', '#publicsafety'],
   },
   {
@@ -63,8 +63,17 @@ const SAMPLE_PRESETS = [
     severity: 'critical' as ReportSeverity,
     title: 'High-pressure water main rupture flooding street',
     description: 'Subterranean municipal water supply pipe leaking clean potable water across both lanes. Low pressure reported by nearby properties.',
-    url: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
+    url: '/images/issues/water_leakage.jpg',
     tags: ['#waterleak', '#drainage', '#pipeburst'],
+  },
+  {
+    label: 'Clogged Drain',
+    category: 'drainage' as ReportCategory,
+    severity: 'high' as ReportSeverity,
+    title: 'Stormwater catchment drain severely obstructed',
+    description: 'Catch basin grates submerged in street debris and organic litter, leading to pooling and flooding during light rain.',
+    url: '/images/issues/drainage.jpg',
+    tags: ['#cloggeddrain', '#stormwater', '#floodrisk'],
   },
 ];
 
@@ -428,7 +437,7 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({ onSuccess, onC
           <div className="p-3.5 rounded-2xl bg-[#F5F2F7] border border-[#EAE4F0] flex items-center gap-3">
             <Loader2 size={18} className="animate-spin text-[#552B58] shrink-0" />
             <div className="text-xs">
-              <strong className="text-slate-900 block font-bold">Analyzing image with Vision Model...</strong>
+              <strong className="text-slate-900 block font-bold">Analyzing image with BharatCode Model (qwen-3.8-27b)...</strong>
               <span className="text-slate-500 text-[11px]">Identifying defect category and assessing hazard severity</span>
             </div>
           </div>
@@ -437,7 +446,12 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({ onSuccess, onC
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 font-bold text-[#552B58]">
                 <Sparkles size={14} className="text-[#8A4A8E]" />
-                <span>AI Vision Diagnostic Confirmed</span>
+                <span>{isLiveAI ? 'BharatCode Qwen-3.8 Live Diagnostic' : 'Diagnostic Classifier Confirmed'}</span>
+                {isLiveAI && (
+                  <span className="text-[9px] bg-[#552B58] text-white px-1.5 py-0.5 rounded font-mono font-medium">
+                    BharatCode AI
+                  </span>
+                )}
               </div>
               <span className="text-[10px] font-mono font-bold text-slate-500 bg-white px-2 py-0.5 rounded-md border border-[#EAE4F0]">
                 {Math.round(aiResult.confidence * 100)}% Confidence

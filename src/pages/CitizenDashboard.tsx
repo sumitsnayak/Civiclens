@@ -149,6 +149,9 @@ export const CitizenDashboard: React.FC<CitizenDashboardProps> = ({
                   <img
                     src={report.image_path}
                     alt={report.title}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = '/images/issues/pothole.jpg';
+                    }}
                     className="w-14 h-14 rounded-xl object-cover border border-[#EAE6F0] shrink-0"
                   />
                   <div className="space-y-1 min-w-0">
