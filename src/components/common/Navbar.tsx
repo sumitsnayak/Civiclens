@@ -40,10 +40,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* 1. Brand Logo (Automotive Precision Shield) */}
+          {/* 1. Brand Logo (Pure Typographic Wordmark, no image/box) */}
           <div 
             onClick={() => handleNavClick('landing')}
-            className="cursor-pointer group flex items-center gap-3 py-2"
+            className="cursor-pointer group flex items-center py-2"
           >
             <BrandLogo size="md" variant="dark" />
           </div>
@@ -64,26 +64,26 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                 >
                   <span>{link.label}</span>
                   {isActive && (
-                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#E5A93C] shadow-[0_0_12px_#E5A93C] rounded-full" />
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#CF9E3C] shadow-[0_0_10px_#CF9E3C] rounded-full" />
                   )}
                 </button>
               );
             })}
 
-            {/* Admin Console (Exclusive Gold Accent) */}
+            {/* Admin Console (Exclusive Soft Gold Accent) */}
             {isAdmin && (
               <button
                 onClick={() => handleNavClick('admin')}
                 className={`relative py-7 text-[11px] font-bold uppercase tracking-[0.18em] transition-colors duration-200 flex items-center gap-1.5 ${
                   currentTab === 'admin'
-                    ? 'text-[#E5A93C]'
+                    ? 'text-[#CF9E3C]'
                     : 'text-amber-500/80 hover:text-amber-400'
                 }`}
               >
                 <Shield size={12} className="stroke-[2.2]" />
                 <span>Admin Console</span>
                 {currentTab === 'admin' && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#E5A93C] shadow-[0_0_12px_#E5A93C] rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#CF9E3C] shadow-[0_0_10px_#CF9E3C] rounded-full" />
                 )}
               </button>
             )}
@@ -92,10 +92,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
           {/* 3. Right Action & User Controls */}
           <div className="flex items-center gap-4">
             
-            {/* Primary Action Button (Lamborghini Signature Amber Accent) */}
+            {/* Primary Action Button (Softened Matte Lamborghini Gold Accent - 5% Reduced Intensity) */}
             <button
               onClick={() => handleNavClick('report')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-[#E5A93C] hover:bg-[#F2B64B] text-black font-extrabold text-[11px] tracking-[0.15em] uppercase shadow-[0_0_20px_rgba(229,169,60,0.25)] hover:shadow-[0_0_28px_rgba(229,169,60,0.45)] transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-[#CF9E3C] hover:bg-[#DBA946] text-black font-extrabold text-[11px] tracking-[0.15em] uppercase shadow-[0_0_18px_rgba(207,158,60,0.22)] hover:shadow-[0_0_24px_rgba(207,158,60,0.36)] transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <Plus size={14} className="stroke-[3]" />
               <span className="hidden sm:inline">Report Issue</span>
@@ -109,14 +109,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                 className="flex items-center gap-2.5 px-3 py-1.5 rounded-sm bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.12] text-xs transition-colors"
                 title="Switch demo role"
               >
-                <div className="w-6 h-6 rounded-sm bg-gradient-to-br from-amber-400 to-[#C68D25] text-black flex items-center justify-center font-black text-[10px] shrink-0 shadow-xs">
+                <div className="w-6 h-6 rounded-sm bg-gradient-to-br from-[#CF9E3C] to-[#AF822A] text-black flex items-center justify-center font-black text-[10px] shrink-0 shadow-xs">
                   {user?.display_name?.charAt(0) || 'U'}
                 </div>
                 <div className="hidden lg:flex flex-col text-left leading-tight">
                   <span className="font-bold text-white text-[11px] truncate max-w-[100px] tracking-wide">
                     {user?.display_name || 'Guest'}
                   </span>
-                  <span className="text-[9px] text-[#E5A93C] font-semibold uppercase tracking-wider">
+                  <span className="text-[9px] text-[#CF9E3C] font-semibold uppercase tracking-wider">
                     {role}
                   </span>
                 </div>
@@ -160,7 +160,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                           <div className="text-[10px] text-zinc-500">Citizen Reporter</div>
                         </div>
                       </div>
-                      {role === 'citizen' && <Check size={13} className="text-[#E5A93C]" />}
+                      {role === 'citizen' && <Check size={13} className="text-[#CF9E3C]" />}
                     </button>
 
                     <button
@@ -175,13 +175,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <Shield size={13} className="text-[#E5A93C]" />
+                        <Shield size={13} className="text-[#CF9E3C]" />
                         <div>
                           <div className="leading-tight">Director Sharma</div>
                           <div className="text-[10px] text-zinc-500">Municipal Admin</div>
                         </div>
                       </div>
-                      {role === 'admin' && <Check size={13} className="text-[#E5A93C]" />}
+                      {role === 'admin' && <Check size={13} className="text-[#CF9E3C]" />}
                     </button>
                   </div>
 
@@ -221,12 +221,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
                 onClick={() => handleNavClick(link.id)}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-sm text-xs font-bold uppercase tracking-[0.16em] transition-colors ${
                   isActive 
-                    ? 'bg-white/[0.08] text-[#E5A93C]' 
+                    ? 'bg-white/[0.08] text-[#CF9E3C]' 
                     : 'text-zinc-300 hover:bg-white/[0.04]'
                 }`}
               >
                 <span>{link.label}</span>
-                {isActive && <div className="w-1.5 h-1.5 rounded-full bg-[#E5A93C]" />}
+                {isActive && <div className="w-1.5 h-1.5 rounded-full bg-[#CF9E3C]" />}
               </button>
             );
           })}
@@ -236,7 +236,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
               onClick={() => handleNavClick('admin')}
               className={`w-full flex items-center justify-between px-4 py-3 rounded-sm text-xs font-bold uppercase tracking-[0.16em] ${
                 currentTab === 'admin' 
-                  ? 'bg-white/[0.08] text-[#E5A93C]' 
+                  ? 'bg-white/[0.08] text-[#CF9E3C]' 
                   : 'text-amber-500 hover:bg-white/[0.04]'
               }`}
             >
@@ -250,7 +250,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
           <div className="pt-3 border-t border-white/[0.08]">
             <button
               onClick={() => handleNavClick('report')}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-sm bg-[#E5A93C] text-black font-extrabold text-xs uppercase tracking-[0.16em] shadow-lg"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-sm bg-[#CF9E3C] text-black font-extrabold text-xs uppercase tracking-[0.16em] shadow-lg"
             >
               <Plus size={15} className="stroke-[3]" />
               <span>Report Issue</span>

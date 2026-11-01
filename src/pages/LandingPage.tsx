@@ -6,7 +6,6 @@ import {
   Search, 
   Clock, 
   CheckCircle, 
-  ThumbsUp,
   Camera,
   Sparkles,
   Map,
@@ -38,191 +37,259 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="space-y-12 pb-20 bg-[#F5F4F8] text-slate-900">
-      {/* 1. HERO SECTION (Dribbble Studio Clean) */}
-      <section className="pt-10 pb-12 bg-white border-b border-[#E7E2ED] shadow-[0_2px_14px_rgba(44,25,48,0.02)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            {/* Left Content */}
-            <div className="lg:col-span-7 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EDE5F0] text-[#552B58] border border-[#DFCEE2] text-xs font-bold">
-                <span className="w-2 h-2 rounded-full bg-[#824987] animate-pulse"></span>
-                <span>Active Community Reporting Platform</span>
+    <div className="space-y-16 pb-24 bg-[#FAFAFC] text-slate-900">
+      
+      {/* 1. HERO SECTION: High-Performance Architectural Cockpit */}
+      <section className="relative pt-12 pb-14 bg-gradient-to-b from-white via-white to-[#FAFAFC] border-b border-slate-200/80">
+        {/* Subtle background ambient mesh */}
+        <div className="absolute inset-0 bg-[radial-gradient(#0000000a_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left Column: Vision & Unified Command Capsule */}
+            <div className="lg:col-span-7 space-y-6">
+              
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-bold tracking-wider shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#CF9E3C] animate-ping" />
+                <span className="text-zinc-200 uppercase font-mono tracking-[0.16em]">MUNICIPAL RADAR GRID</span>
+                <span className="text-[#CF9E3C] font-mono text-[10px] pl-1.5 border-l border-white/20">LIVE</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight leading-[1.15]">
-                See a Problem. <br />
-                <span className="text-[#552B58]">Report It. Track the Change.</span>
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-[1.12]">
+                See a Defect. <br />
+                <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent">Report.</span>{' '}
+                <span className="bg-gradient-to-r from-[#CF9E3C] via-amber-400 to-[#CF9E3C] bg-clip-text text-transparent">Track. Resolve.</span>
               </h1>
 
-              <p className="text-sm sm:text-base text-slate-600 max-w-2xl leading-relaxed font-normal">
-                Report road potholes, sanitation hazards, broken streetlights, and drainage issues. Snap a photo, verify the location on an interactive map, and track repairs until resolution.
+              <p className="text-sm sm:text-base text-slate-600 max-w-xl leading-relaxed font-normal">
+                Empowering Mangalore citizens with instant AI vision triage, GPS geotagging, and a transparent resolution pipeline directly connected to municipal maintenance.
               </p>
 
-              {/* Fast Search & Action Row */}
-              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-2xl">
-                <form onSubmit={handleSearchSubmit} className="relative flex-1">
+              {/* Unified Command Capsule (No boxy separated buttons) */}
+              <div className="pt-2 max-w-xl">
+                <form 
+                  onSubmit={handleSearchSubmit}
+                  className="p-1.5 sm:p-2 bg-white rounded-full border border-slate-200/90 shadow-[0_12px_36px_-8px_rgba(0,0,0,0.08)] flex items-center gap-2 transition-all focus-within:border-[#CF9E3C] focus-within:shadow-[0_12px_40px_-8px_rgba(207,158,60,0.22)]"
+                >
+                  <div className="pl-3 sm:pl-4 text-slate-400">
+                    <Search size={16} />
+                  </div>
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by ticket ID, street address, or issue..."
-                    className="w-full pl-9 pr-4 py-2.5 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white transition-all shadow-2xs"
+                    placeholder="Search ticket ID, street, or issue..."
+                    className="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-900 placeholder-slate-400 focus:outline-none"
                   />
-                  <Search size={14} className="absolute left-3 top-3 text-slate-400" />
+                  
+                  <button
+                    type="button"
+                    onClick={() => onNavigate('explorer')}
+                    className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-all shrink-0"
+                  >
+                    <Map size={13} className="text-[#CF9E3C]" />
+                    <span>Map</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => onNavigate('report')}
+                    className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-full bg-[#CF9E3C] hover:bg-[#DBA946] text-black text-xs font-black uppercase tracking-wider shadow-[0_4px_16px_rgba(207,158,60,0.25)] transition-all hover:scale-[1.02] active:scale-[0.98] shrink-0"
+                  >
+                    <Plus size={14} className="stroke-[3]" />
+                    <span>Report</span>
+                  </button>
                 </form>
 
-                <button
-                  onClick={() => onNavigate('report')}
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#442646] hover:bg-[#341B36] text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] shrink-0"
-                >
-                  <Plus size={15} className="stroke-[2.5]" />
-                  <span>Report an Issue</span>
-                </button>
-
-                <button
-                  onClick={() => onNavigate('explorer')}
-                  className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-white border border-[#E7E2ED] hover:bg-[#F5F3F8] text-slate-700 text-xs font-semibold transition-all shrink-0 shadow-2xs"
-                >
-                  <MapPin size={14} className="text-[#552B58]" />
-                  <span>Explore Map</span>
-                </button>
-              </div>
-
-              {/* Trust Indicators */}
-              <div className="pt-2 flex items-center gap-6 text-[11px] font-medium text-slate-500">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                  Photo Verification
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                  GPS Coordinate Pinning
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
-                  Open Resolution Pipeline
-                </span>
-              </div>
-            </div>
-
-            {/* Right Hero Visual Card */}
-            <div className="lg:col-span-5 relative">
-              <div className="bg-[#FAF9FC] border border-[#E7E2ED] rounded-3xl p-5 shadow-[0_12px_32px_-4px_rgba(44,25,48,0.06)] space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-[#EDEAF2]">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                    <span className="text-[11px] font-bold text-slate-700 ml-1.5">Live Dispatch Stream</span>
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#EDE5F0] text-[#552B58]">
-                    Real-time
+                {/* Telemetry Micro Indicators */}
+                <div className="pt-3.5 flex flex-wrap items-center gap-5 text-[11px] font-medium text-slate-500">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    AI Vision Analysis
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#CF9E3C]" />
+                    Mangalore GIS Geotag
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+                    Verified Municipal SLA
                   </span>
                 </div>
+              </div>
 
-                {/* Hero Showcase Card */}
-                <div className="rounded-2xl overflow-hidden border border-[#E7E2ED] bg-white shadow-2xs">
-                  <div className="relative aspect-video w-full bg-slate-100">
-                    <img 
-                      src="/images/issues/pothole.jpg" 
-                      alt="Damaged asphalt road" 
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = '/images/issues/pothole.jpg';
-                      }}
-                    />
-                    <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-lg bg-black/60 backdrop-blur-md text-[10px] font-mono text-white">
+            </div>
+
+            {/* Right Column: Deep Obsidian Telemetry Cockpit */}
+            <div className="lg:col-span-5 relative">
+              {/* Dynamic warm aura background */}
+              <div className="absolute -inset-2 bg-gradient-to-tr from-[#CF9E3C]/20 via-slate-900/10 to-transparent rounded-[32px] blur-2xl opacity-60 pointer-events-none" />
+
+              {/* Obsidian Cockpit Frame */}
+              <div className="relative rounded-[28px] bg-[#0A0B10] border border-white/[0.12] p-4 sm:p-5 shadow-[0_24px_60px_rgba(0,0,0,0.4)] text-white overflow-hidden">
+                {/* Telemetry Header */}
+                <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-[#CF9E3C] animate-pulse" />
+                    <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-zinc-300 font-bold">
+                      LIVE DISPATCH STREAM
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 font-mono text-[10px] text-zinc-400">
+                    <span className="text-[#CF9E3C]">GPS:</span> 12.9141° N, 74.8560° E
+                  </div>
+                </div>
+
+                {/* Cinematic Defect Visual with Floating HUD Overlay */}
+                <div className="relative mt-3 rounded-2xl overflow-hidden aspect-[16/10] bg-zinc-900 border border-white/[0.08] group">
+                  <img
+                    src="/images/issues/pothole.jpg"
+                    alt="Damaged asphalt road"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = '/images/issues/pothole.jpg';
+                    }}
+                  />
+                  {/* Subtle vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/40 pointer-events-none" />
+
+                  {/* HUD Reference Tag & Severity */}
+                  <div className="absolute top-3 left-3 flex items-center gap-2">
+                    <span className="px-2.5 py-1 rounded-md bg-black/70 backdrop-blur-md font-mono text-[10px] text-white border border-white/10 font-bold">
                       CVL-2026-8812
-                    </div>
-                    <div className="absolute bottom-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-[#EDE5F0] text-[#552B58] text-[10px] font-bold border border-[#DFCEE2]">
+                    </span>
+                    <span className="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[9px] font-bold uppercase tracking-wider">
+                      Critical
+                    </span>
+                  </div>
+
+                  <div className="absolute top-3 right-3">
+                    <div className="px-2.5 py-1 rounded-full bg-[#CF9E3C]/20 border border-[#CF9E3C]/40 text-[#CF9E3C] text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 backdrop-blur-md">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#CF9E3C] animate-pulse" />
                       In Remediation
                     </div>
                   </div>
 
-                  <div className="p-4 space-y-2">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-[11px] font-bold text-slate-500">📍 K.S. Rao Road, Mangalore, Karnataka</span>
-                      <span className="text-[11px] text-slate-400">32m ago</span>
+                  {/* Bottom overlay info */}
+                  <div className="absolute bottom-3 left-3 right-3 text-left">
+                    <div className="text-[10px] text-zinc-400 flex items-center gap-1 font-medium">
+                      <MapPin size={11} className="text-[#CF9E3C]" />
+                      <span>K.S. Rao Road, Mangalore, Karnataka</span>
+                      <span className="ml-auto text-zinc-500">32m ago</span>
                     </div>
-                    <h4 className="font-bold text-slate-900 text-sm">
+                    <div className="text-sm font-bold text-white mt-1">
                       Severe Road Cavity & Exposed Rebar
-                    </h4>
-                    <div className="flex items-center justify-between text-[11px] pt-2 border-t border-[#F5F3F8]">
-                      <span className="text-emerald-700 font-medium">✓ Acknowledged by City Works</span>
-                      <span className="font-bold text-[#552B58]">👍 42 Citizens Agreed</span>
                     </div>
                   </div>
                 </div>
+
+                {/* Bottom Telemetry Metrics Strip */}
+                <div className="mt-3 pt-3 border-t border-white/[0.08] flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold">
+                      ✓
+                    </div>
+                    <span className="text-[11px] text-zinc-300 font-medium">City Works Dispatched</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-[#CF9E3C] font-mono text-[11px] font-bold">
+                    <span>🔥 42 Citizens Confirmed</span>
+                  </div>
+                </div>
+
               </div>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* 2. STATS OVERVIEW CARDS */}
+      {/* 2. CONTINUOUS TELEMETRY DOCK (Replaces 4 isolated boxes) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white border border-[#E7E2ED] rounded-2xl p-5 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)] hover:shadow-md transition-shadow">
-            <div className="text-xs font-semibold text-slate-500">Total Registered</div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">{stats?.total ?? 6}</div>
-            <div className="text-[11px] text-slate-400 mt-1">Verified community submissions</div>
-          </div>
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200/90 rounded-[28px] p-2 sm:p-3 shadow-[0_12px_36px_-6px_rgba(0,0,0,0.04)]">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+            
+            {/* Metric 1 */}
+            <div className="p-4 sm:p-6 flex flex-col justify-center">
+              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
+                <span>Total Registered</span>
+                <div className="w-2 h-2 rounded-full bg-slate-300" />
+              </div>
+              <div className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight mt-1">
+                {stats?.total ?? 6}
+              </div>
+              <div className="text-[11px] text-slate-400 mt-1 font-medium">Verified community submissions</div>
+            </div>
 
-          <div className="bg-white border border-[#E7E2ED] rounded-2xl p-5 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)] hover:shadow-md transition-shadow">
-            <div className="text-xs font-bold text-[#B55D1C] flex items-center gap-1">
-              <Clock size={12} />
-              <span>In Remediation</span>
+            {/* Metric 2 */}
+            <div className="p-4 sm:p-6 flex flex-col justify-center">
+              <div className="flex items-center justify-between text-amber-700 text-xs font-bold">
+                <span className="flex items-center gap-1.5">
+                  <Clock size={12} />
+                  In Remediation
+                </span>
+                <div className="w-2 h-2 rounded-full bg-[#CF9E3C] animate-pulse" />
+              </div>
+              <div className="text-2xl sm:text-4xl font-black text-amber-700 tracking-tight mt-1">
+                {(stats?.in_progress ?? 0) + (stats?.under_review ?? 0)}
+              </div>
+              <div className="text-[11px] text-slate-400 mt-1 font-medium">Active municipal work orders</div>
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-[#B55D1C] mt-1">
-              {(stats?.in_progress ?? 0) + (stats?.under_review ?? 0)}
-            </div>
-            <div className="text-[11px] text-slate-400 mt-1">Active municipal work orders</div>
-          </div>
 
-          <div className="bg-white border border-[#E7E2ED] rounded-2xl p-5 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)] hover:shadow-md transition-shadow">
-            <div className="text-xs font-bold text-[#247A48] flex items-center gap-1">
-              <CheckCircle size={12} />
-              <span>Resolved</span>
+            {/* Metric 3 */}
+            <div className="p-4 sm:p-6 flex flex-col justify-center">
+              <div className="flex items-center justify-between text-emerald-700 text-xs font-bold">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle size={12} />
+                  Resolved
+                </span>
+                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+              </div>
+              <div className="text-2xl sm:text-4xl font-black text-emerald-700 tracking-tight mt-1">
+                {stats?.resolved ?? 1}
+              </div>
+              <div className="text-[11px] text-slate-400 mt-1 font-medium">Repaired & citizen confirmed</div>
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-[#247A48] mt-1">
-              {stats?.resolved ?? 1}
-            </div>
-            <div className="text-[11px] text-slate-400 mt-1">Repaired & citizen confirmed</div>
-          </div>
 
-          <div className="bg-white border border-[#E7E2ED] rounded-2xl p-5 shadow-[0_4px_20px_-2px_rgba(44,25,48,0.03)] hover:shadow-md transition-shadow">
-            <div className="text-xs font-semibold text-slate-500">Average Turnaround</div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">
-              {stats?.avg_resolution_days ?? 2.4} Days
+            {/* Metric 4 */}
+            <div className="p-4 sm:p-6 flex flex-col justify-center">
+              <div className="flex items-center justify-between text-slate-400 text-xs font-semibold">
+                <span>Average Turnaround</span>
+                <span className="text-[10px] font-mono font-bold text-[#CF9E3C] bg-amber-50 px-1.5 py-0.5 rounded">SLA</span>
+              </div>
+              <div className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight mt-1">
+                {stats?.avg_resolution_days ?? 2.4} <span className="text-base sm:text-lg font-bold text-slate-500">Days</span>
+              </div>
+              <div className="text-[11px] text-slate-400 mt-1 font-medium">From triage to verified fix</div>
             </div>
-            <div className="text-[11px] text-slate-400 mt-1">From triage to completion</div>
+
           </div>
         </div>
       </section>
 
-      {/* 3. RECENT COMMUNITY SUBMISSIONS (Dribbble Complaint Feed) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
-        <div className="flex items-center justify-between">
+      {/* 3. RECENT COMMUNITY SUBMISSIONS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div className="flex items-end justify-between border-b border-slate-200/80 pb-4">
           <div>
-            <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+            <div className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#CF9E3C]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#CF9E3C]" />
+              LIVE TELEMETRY FEED
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-slate-950 tracking-tight mt-0.5">
               Recent Community Reports
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Live submissions from citizens currently in review or dispatch
-            </p>
           </div>
 
           <button
             onClick={() => onNavigate('explorer')}
-            className="text-xs font-bold text-[#552B58] hover:text-[#381B3B] flex items-center gap-1 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 hover:bg-black text-white text-xs font-bold transition-all shadow-sm group"
           >
-            <span>View All Issues</span>
-            <ChevronRight size={14} />
+            <span>View Full Issues Map</span>
+            <ChevronRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {recentReports.map((report) => (
             <ReportCard
               key={report.id}
@@ -233,82 +300,100 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* 4. FOUR STEP PROCESS (How It Works) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white border border-[#E7E2ED] rounded-3xl p-6 sm:p-10 shadow-[0_4px_24px_-2px_rgba(44,25,48,0.03)] space-y-8">
-          <div className="max-w-2xl">
-            <h2 className="text-xl sm:text-2xl font-black text-slate-950 tracking-tight">
-              How CivicLens Works
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              From identification to verified completion in four transparent steps
-            </p>
+      {/* 4. DYNAMIC PROCESS ROADMAP (Breaking out of 4 boxes inside a big box) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center max-w-xl mx-auto space-y-2 mb-12">
+          <div className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#CF9E3C]">
+            TRANSPARENT WORKFLOW
           </div>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
+            How CivicLens Works
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500">
+            From identification to verified completion in four transparent steps
+          </p>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#EDE5F0] text-[#552B58] flex items-center justify-center font-bold text-sm">
-                1
-              </div>
-              <h3 className="font-bold text-slate-900 text-sm">Capture Photo</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Take or upload a clear photo of the pothole, trash accumulation, or streetlight issue.
-              </p>
-            </div>
+        {/* Connected Trajectory Pipeline */}
+        <div className="relative">
+          {/* Continuous tracking line on desktop */}
+          <div className="hidden lg:block absolute top-7 left-14 right-14 h-[2px] bg-gradient-to-r from-slate-200 via-[#CF9E3C]/50 to-slate-200 z-0" />
 
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#EDE5F0] text-[#552B58] flex items-center justify-center font-bold text-sm">
-                2
-              </div>
-              <h3 className="font-bold text-slate-900 text-sm">Smart Classification</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Vision analysis suggests category and severity, with full citizen review and manual override.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#EDE5F0] text-[#552B58] flex items-center justify-center font-bold text-sm">
-                3
-              </div>
-              <h3 className="font-bold text-slate-900 text-sm">Confirm Location</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Pinpoint the exact location on an interactive OpenStreetMap with GPS reverse-geocoding.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#EDE5F0] text-[#552B58] flex items-center justify-center font-bold text-sm">
-                4
-              </div>
-              <h3 className="font-bold text-slate-900 text-sm">Track Resolution</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Follow the transparent pipeline from Reported to Under Review, In Progress, and Resolved.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+            {[
+              {
+                step: '01',
+                title: 'Capture Defect',
+                desc: 'Snap or upload a photo of the road cavity, garbage heap, or water leakage.',
+                icon: Camera,
+              },
+              {
+                step: '02',
+                title: 'AI Vision Triage',
+                desc: 'Official BharatCode vision model classifies defect category and severity rating.',
+                icon: Sparkles,
+              },
+              {
+                step: '03',
+                title: 'Pin Mangalore GPS',
+                desc: 'Pinpoint precise location on the interactive map with reverse-geocoding.',
+                icon: MapPin,
+              },
+              {
+                step: '04',
+                title: 'Track Resolution',
+                desc: 'Monitor live status changes from Review to Dispatch and verified completion.',
+                icon: CheckCircle,
+              },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.step} className="flex flex-col items-center text-center group">
+                  {/* Floating Milestone Node */}
+                  <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200/90 shadow-[0_8px_24px_rgba(0,0,0,0.05)] flex items-center justify-center text-slate-900 group-hover:border-[#CF9E3C] group-hover:shadow-[0_8px_30px_rgba(207,158,60,0.22)] transition-all duration-300 relative">
+                    <Icon size={20} className="text-slate-700 group-hover:text-[#CF9E3C] transition-colors" />
+                    <span className="absolute -top-2.5 -right-2.5 px-2 py-0.5 rounded-full bg-slate-900 text-white font-mono text-[9px] font-bold group-hover:bg-[#CF9E3C] group-hover:text-black transition-colors shadow-xs">
+                      {item.step}
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-slate-900 text-sm mt-4 tracking-tight">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 leading-relaxed mt-1.5 max-w-[220px]">
+                    {item.desc}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* 5. EXPLORE CATEGORIES */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-        <div>
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-            Supported Problem Categories
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Standardized issue types routed directly to municipal maintenance teams
-          </p>
+      {/* 5. SUPPORTED PROBLEM CATEGORIES (Organic Floating Capsule Cards) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
+        <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+          <div>
+            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#CF9E3C]">
+              MUNICIPAL TAXONOMY
+            </div>
+            <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+              Supported Problem Categories
+            </h2>
+          </div>
+          <span className="text-xs text-slate-400 hidden sm:inline">
+            Directly routed to municipal engineering departments
+          </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
           {Object.entries(CATEGORIES_CONFIG).map(([key, item]) => (
             <button
               key={key}
               onClick={() => onNavigate('explorer')}
-              className="p-4 bg-white border border-[#E7E2ED] hover:border-[#D3CADB] rounded-2xl text-left shadow-2xs hover:shadow-sm transition-all group"
+              className="p-4 bg-white hover:bg-slate-50 border border-slate-200/90 hover:border-[#CF9E3C]/60 rounded-2xl text-left shadow-[0_4px_16px_rgba(0,0,0,0.02)] hover:shadow-[0_10px_25px_rgba(207,158,60,0.12)] hover:-translate-y-0.5 transition-all group"
             >
-              <div className="text-xl mb-1.5">{item.icon}</div>
-              <div className="font-bold text-slate-900 text-xs group-hover:text-[#552B58] transition-colors">
+              <div className="text-2xl mb-2 group-hover:scale-110 transition-transform">{item.icon}</div>
+              <div className="font-bold text-slate-900 text-xs group-hover:text-[#CF9E3C] transition-colors">
                 {item.label}
               </div>
               <div className="text-[11px] text-slate-400 mt-0.5 line-clamp-1">
@@ -318,6 +403,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           ))}
         </div>
       </section>
+
     </div>
   );
 };
