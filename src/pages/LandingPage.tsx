@@ -50,10 +50,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             {/* Left Column: Vision & Unified Command Capsule */}
             <div className="lg:col-span-7 space-y-6">
               
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white text-[11px] font-bold tracking-wider shadow-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#CF9E3C] animate-ping" />
-                <span className="text-zinc-200 uppercase font-mono tracking-[0.16em]">MUNICIPAL RADAR GRID</span>
-                <span className="text-[#CF9E3C] font-mono text-[10px] pl-1.5 border-l border-white/20">LIVE</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-800 text-[11px] font-bold tracking-wider shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#CF9E3C] animate-pulse" />
+                <span className="text-slate-700 uppercase font-mono tracking-[0.16em]">MUNICIPAL RADAR GRID</span>
+                <span className="text-[#CF9E3C] font-mono text-[10px] pl-1.5 border-l border-slate-300">LIVE</span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-[1.12]">
@@ -121,28 +121,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
             </div>
 
-            {/* Right Column: Deep Obsidian Telemetry Cockpit */}
+            {/* Right Column: Architectural Grey Telemetry Cockpit (Softened Color Intensity) */}
             <div className="lg:col-span-5 relative">
-              {/* Dynamic warm aura background */}
-              <div className="absolute -inset-2 bg-gradient-to-tr from-[#CF9E3C]/20 via-slate-900/10 to-transparent rounded-[32px] blur-2xl opacity-60 pointer-events-none" />
+              {/* Subtle ambient aura */}
+              <div className="absolute -inset-2 bg-gradient-to-tr from-slate-200/60 to-slate-100/30 rounded-[32px] blur-xl opacity-60 pointer-events-none" />
 
-              {/* Obsidian Cockpit Frame */}
-              <div className="relative rounded-[28px] bg-[#0A0B10] border border-white/[0.12] p-4 sm:p-5 shadow-[0_24px_60px_rgba(0,0,0,0.4)] text-white overflow-hidden">
+              {/* Refined Grey Cockpit Frame */}
+              <div className="relative rounded-[28px] bg-gradient-to-b from-[#F2F4F7] to-[#E5E9EE] border border-slate-300/80 p-4 sm:p-5 shadow-[0_14px_35px_-8px_rgba(0,0,0,0.06)] text-slate-900 overflow-hidden">
                 {/* Telemetry Header */}
-                <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-200/90">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-[#CF9E3C] animate-pulse" />
-                    <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-zinc-300 font-bold">
+                    <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-slate-600 font-bold">
                       LIVE DISPATCH STREAM
                     </span>
                   </div>
-                  <div className="flex items-center gap-1.5 font-mono text-[10px] text-zinc-400">
-                    <span className="text-[#CF9E3C]">GPS:</span> 12.9141° N, 74.8560° E
+                  <div className="flex items-center gap-1.5 font-mono text-[10px] text-slate-500 font-medium">
+                    <span className="text-slate-700 font-bold">GPS:</span> 12.9141° N, 74.8560° E
                   </div>
                 </div>
 
-                {/* Cinematic Defect Visual with Floating HUD Overlay */}
-                <div className="relative mt-3 rounded-2xl overflow-hidden aspect-[16/10] bg-zinc-900 border border-white/[0.08] group">
+                {/* Defect Visual with Floating HUD Overlay */}
+                <div className="relative mt-3 rounded-2xl overflow-hidden aspect-[16/10] bg-slate-200 border border-slate-300/80 group">
                   <img
                     src="/images/issues/pothole.jpg"
                     alt="Damaged asphalt road"
@@ -152,31 +152,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                     }}
                   />
                   {/* Subtle vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/40 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/30 pointer-events-none" />
 
-                  {/* HUD Reference Tag & Severity */}
+                  {/* HUD Reference Tag & Severity (Muted Soft Intensity) */}
                   <div className="absolute top-3 left-3 flex items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-md bg-black/70 backdrop-blur-md font-mono text-[10px] text-white border border-white/10 font-bold">
+                    <span className="px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md font-mono text-[10px] text-white border border-white/10 font-bold">
                       CVL-2026-8812
                     </span>
-                    <span className="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[9px] font-bold uppercase tracking-wider">
+                    <span className="px-2 py-0.5 rounded-md bg-black/50 backdrop-blur-md text-rose-200 border border-rose-400/30 text-[9px] font-bold uppercase tracking-wider">
                       Critical
                     </span>
                   </div>
 
                   <div className="absolute top-3 right-3">
-                    <div className="px-2.5 py-1 rounded-full bg-[#CF9E3C]/20 border border-[#CF9E3C]/40 text-[#CF9E3C] text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 backdrop-blur-md">
+                    <div className="px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md border border-[#CF9E3C]/40 text-[#E5B555] text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#CF9E3C] animate-pulse" />
                       In Remediation
                     </div>
                   </div>
 
                   {/* Bottom overlay info */}
-                  <div className="absolute bottom-3 left-3 right-3 text-left">
-                    <div className="text-[10px] text-zinc-400 flex items-center gap-1 font-medium">
+                  <div className="absolute bottom-3 left-3 right-3 text-left text-white">
+                    <div className="text-[10px] text-zinc-300 flex items-center gap-1 font-medium">
                       <MapPin size={11} className="text-[#CF9E3C]" />
                       <span>K.S. Rao Road, Mangalore, Karnataka</span>
-                      <span className="ml-auto text-zinc-500">32m ago</span>
+                      <span className="ml-auto text-zinc-400">32m ago</span>
                     </div>
                     <div className="text-sm font-bold text-white mt-1">
                       Severe Road Cavity & Exposed Rebar
@@ -185,14 +185,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
                 </div>
 
                 {/* Bottom Telemetry Metrics Strip */}
-                <div className="mt-3 pt-3 border-t border-white/[0.08] flex items-center justify-between text-xs">
+                <div className="mt-3 pt-3 border-t border-slate-200/90 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold">
+                    <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] font-bold">
                       ✓
                     </div>
-                    <span className="text-[11px] text-zinc-300 font-medium">City Works Dispatched</span>
+                    <span className="text-[11px] text-slate-600 font-medium">City Works Dispatched</span>
                   </div>
-                  <div className="flex items-center gap-1 text-[#CF9E3C] font-mono text-[11px] font-bold">
+                  <div className="flex items-center gap-1 text-slate-700 font-mono text-[11px] font-bold">
                     <span>🔥 42 Citizens Confirmed</span>
                   </div>
                 </div>
