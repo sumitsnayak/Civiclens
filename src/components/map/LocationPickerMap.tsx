@@ -30,14 +30,14 @@ export const LocationPickerMap: React.FC<LocationPickerProps> = ({
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [statusMessage, setStatusMessage] = useState<string>('Click or drag pin to adjust coordinates');
 
-  // Custom Pin Icon matching Dribbble Plum Palette
+  // Custom Pin Icon matching Luxury Slate/Gold Palette
   const createPinIcon = () => {
     const iconHtml = `
       <div class="relative cursor-grab active:cursor-grabbing" style="transform: translate(-50%, -100%);">
-        <div class="w-9 h-9 rounded-2xl flex items-center justify-center shadow-lg bg-[#442646] border-2 border-white">
-          <div class="w-3 h-3 rounded-full bg-[#E5B5E8]"></div>
+        <div class="w-9 h-9 rounded-2xl flex items-center justify-center shadow-lg bg-slate-950 border-2 border-[#CF9E3C]">
+          <div class="w-3 h-3 rounded-full bg-[#CF9E3C] animate-pulse"></div>
         </div>
-        <div class="w-2.5 h-2.5 rotate-45 mx-auto -mt-1 bg-[#442646]"></div>
+        <div class="w-2.5 h-2.5 rotate-45 mx-auto -mt-1 bg-slate-950"></div>
       </div>
     `;
     return L.divIcon({
@@ -190,13 +190,13 @@ export const LocationPickerMap: React.FC<LocationPickerProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search street, neighborhood, or landmark..."
-            className="w-full pl-8 pr-20 py-2 bg-[#F5F4F8] border border-[#E7E2ED] rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#552B58] focus:bg-white transition-all"
+            className="w-full pl-8 pr-20 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#CF9E3C] focus:bg-white transition-all"
           />
           <Search className="absolute left-2.5 top-2.5 text-slate-400" size={14} />
           <button
             type="submit"
             disabled={isSearching}
-            className="absolute right-1 top-1 px-3 py-1 bg-[#442646] hover:bg-[#341B36] text-white text-[11px] font-bold rounded-lg transition-colors flex items-center gap-1"
+            className="absolute right-1 top-1 px-3 py-1 bg-slate-900 hover:bg-black text-[#CF9E3C] text-[11px] font-bold rounded-lg transition-colors flex items-center gap-1 shadow-xs"
           >
             {isSearching ? <Loader2 size={11} className="animate-spin" /> : 'Search'}
           </button>
@@ -206,28 +206,28 @@ export const LocationPickerMap: React.FC<LocationPickerProps> = ({
           type="button"
           onClick={handleUseCurrentLocation}
           disabled={isLocating}
-          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#EDE5F0] hover:bg-[#E5DAE9] text-[#552B58] border border-[#DFCEE2] rounded-xl text-xs font-bold transition-colors shadow-2xs shrink-0"
+          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 rounded-xl text-xs font-bold transition-colors shadow-2xs shrink-0"
         >
-          {isLocating ? <Loader2 size={13} className="animate-spin" /> : <Navigation size={13} />}
+          {isLocating ? <Loader2 size={13} className="animate-spin text-[#CF9E3C]" /> : <Navigation size={13} className="text-[#CF9E3C]" />}
           <span>Use GPS</span>
         </button>
       </div>
 
       {/* Leaflet Map Canvas */}
-      <div className="relative rounded-2xl overflow-hidden border border-[#E7E2ED] shadow-2xs">
+      <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-2xs">
         <div ref={mapContainerRef} style={{ height: '240px', width: '100%' }} />
 
         {/* Floating Address Bar */}
-        <div className="absolute bottom-2.5 left-2.5 right-2.5 z-[1000] bg-white/95 backdrop-blur-md p-2.5 rounded-xl border border-[#E7E2ED] shadow-sm flex items-center justify-between gap-2">
+        <div className="absolute bottom-2.5 left-2.5 right-2.5 z-[1000] bg-white/95 backdrop-blur-md p-2.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-xs truncate">
-            <MapPin size={14} className="text-[#552B58] shrink-0" />
+            <MapPin size={14} className="text-[#CF9E3C] shrink-0" />
             <span className="font-semibold text-slate-900 truncate text-[11px]">
               {address || 'Pin location confirmed'}
             </span>
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="text-[10px] font-mono text-slate-500 bg-[#F5F4F8] px-2 py-0.5 rounded-md border border-[#E7E2ED]">
+            <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
               {currentPos.lat.toFixed(4)}, {currentPos.lng.toFixed(4)}
             </span>
             <CheckCircle size={13} className="text-emerald-600" />
