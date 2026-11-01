@@ -142,7 +142,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
 
                   <div className="p-4 space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-[11px] font-bold text-slate-500">📍 Market St & 2nd St, CA</span>
+                      <span className="text-[11px] font-bold text-slate-500">📍 K.S. Rao Road, Mangalore, Karnataka</span>
                       <span className="text-[11px] text-slate-400">32m ago</span>
                     </div>
                     <h4 className="font-bold text-slate-900 text-sm">

@@ -11,8 +11,8 @@ interface LocationPickerProps {
 }
 
 export const LocationPickerMap: React.FC<LocationPickerProps> = ({
-  initialLat = 37.7749,
-  initialLng = -122.4194,
+  initialLat = 12.9141,
+  initialLng = 74.8560,
   initialAddress = '',
   onLocationSelected,
 }) => {

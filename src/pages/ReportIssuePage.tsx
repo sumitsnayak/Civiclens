@@ -98,9 +98,9 @@ export const ReportIssuePage: React.FC<ReportIssuePageProps> = ({ onSuccess, onC
   const [description, setDescription] = useState<string>('');
   const [landmark, setLandmark] = useState<string>('');
   const [location, setLocation] = useState<{ lat: number; lng: number; address: string }>({
-    lat: 37.7749,
-    lng: -122.4194,
-    address: '777 Brockton Avenue, Abington MA 2351',
+    lat: 12.9141,
+    lng: 74.8560,
+    address: 'K.S. Rao Road, Hampankatta, Mangalore, Karnataka 575001',
   });
   const [showMap, setShowMap] = useState<boolean>(false);
 

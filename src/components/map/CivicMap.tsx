@@ -17,7 +17,7 @@ export const CivicMap: React.FC<CivicMapProps> = ({
   selectedReportId,
   onSelectReport,
   height = '500px',
-  center = [37.7749, -122.4194],
+  center = [12.9141, 74.8560],
   zoom = 13,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);

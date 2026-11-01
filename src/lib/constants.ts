@@ -10,8 +10,8 @@ export const APP_CONFIG = {
     githubRepo: 'https://github.com/example/civiclens',
   },
   defaultMapCenter: {
-    lat: 37.7749,
-    lng: -122.4194, // Default to metropolitan center, adapts to user location
+    lat: Number(import.meta.env.VITE_DEFAULT_LAT) || 12.9141,
+    lng: Number(import.meta.env.VITE_DEFAULT_LNG) || 74.8560, // Default to Mangalore, Karnataka, India
     zoom: 13,
   },
 };

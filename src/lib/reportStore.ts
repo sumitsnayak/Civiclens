@@ -11,7 +11,7 @@ import { INITIAL_DEMO_REPORTS } from './mockData';
 import { supabase, isSupabaseConfigured } from './supabase';
 import { generateReferenceCode, calculatePriorityScore } from './utils';
 
-const STORAGE_KEY = 'civiclens_reports_store_v2';
+const STORAGE_KEY = 'civiclens_reports_store_v3';
 
 function loadLocalReports(): Report[] {
   try {
